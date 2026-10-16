@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "engines": {
-    "node": ">=22.22.0"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "dev": "astro dev",
@@ -12,7 +12,6 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@bruits/satteri-win32-x64-msvc": "^0.10.5",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^5.18.2",
     "marked": "^18.1.1",
