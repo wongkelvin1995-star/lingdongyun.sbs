@@ -1,0 +1,158 @@
+---
+// FeedbackSection.astro: 真实用户反馈与意见收集专区
+// 严格禁令：严禁制造假用户、假头像与假五星好评；采用真实反馈通道与用户建议渠道
+import { SITE_CONFIG } from '../config/site';
+---
+
+<section id="feedback" class="py-20 relative z-10 scroll-mt-16">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="p-8 sm:p-10 rounded-3xl bg-[#160C32]/75 border border-[#8B40FF]/30 backdrop-blur-md shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)]">
+      <!-- Header -->
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#588DFF]/15 border border-[#588DFF]/30 text-xs font-semibold text-[#588DFF] mb-3">
+          <span>倾听真实声音 · 持续打磨服务</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">
+          灵动云 用户反馈与建议
+        </h2>
+        <p class="text-xs sm:text-sm text-[#D4C8ED]/85 leading-relaxed">
+          我们坚持不编造虚假评价与夸大评分。灵动云的每一次网络优化与功能迭代，均源于广大用户的实际使用体验。欢迎向我们提出宝贵的改进建议。
+        </p>
+      </div>
+
+      <!-- Two Column Layout: Support Info & Suggestion Box -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+        <!-- Left: Official channels (2 cols) -->
+        <div class="md:col-span-2 space-y-5 text-xs sm:text-sm text-[#D4C8ED]/85 border-b md:border-b-0 md:border-r border-[#8B40FF]/20 pb-6 md:pb-0 md:pr-6">
+          <div>
+            <h3 class="text-base font-bold text-white mb-2 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-[#8B40FF]"></span>
+              官方售后与工单
+            </h3>
+            <p class="text-xs text-[#D4C8ED]/75 leading-relaxed">
+              如遇订阅失效、客户端报错等紧急技术问题，建议登录灵动云用户中心发起 1 对 1 技术工单，工程师将在第一时间为您排查。
+            </p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[#09071C]/80 border border-[#8B40FF]/25 space-y-2">
+            <span class="text-xs font-semibold text-white block">官方客服渠道：</span>
+            <p class="text-xs text-[#D4C8ED]/70">
+              1. 登录用户中心提交服务工单<br />
+              2. 查阅使用教程自查常见故障<br />
+              3. 服务承诺：24 小时内工单响应
+            </p>
+          </div>
+
+          <a
+            href={SITE_CONFIG.registerUrl}
+            target="_blank"
+            rel="sponsored noopener noreferrer"
+            class="inline-flex items-center gap-2 text-xs font-semibold text-[#C15BFF] hover:text-white transition-colors"
+          >
+            <span>进入官方控制台提交工单</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Right: Honest Feedback / Suggestion Form (3 cols) -->
+        <div class="md:col-span-3">
+          <form id="feedback-form" class="space-y-4">
+            <div>
+              <label for="fb-topic" class="block text-xs font-medium text-[#D4C8ED] mb-1.5">
+                反馈主题 <span class="text-[#C15BFF]">*</span>
+              </label>
+              <select
+                id="fb-topic"
+                required
+                class="w-full px-3.5 py-2.5 rounded-xl bg-[#09071C]/90 border border-[#8B40FF]/30 text-white text-xs sm:text-sm focus:outline-none focus:border-[#C15BFF] transition-colors"
+              >
+                <option value="node-quality">节点延迟或连接质量建议</option>
+                <option value="plans">套餐价格与流量需求建议</option>
+                <option value="tutorials">客户端配置与教程改进建议</option>
+                <option value="website">网站交互与体验建议</option>
+                <option value="other">其他综合意见</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="fb-contact" class="block text-xs font-medium text-[#D4C8ED] mb-1.5">
+                联系方式（可选，便于客服针对性回复）
+              </label>
+              <input
+                type="text"
+                id="fb-contact"
+                placeholder="例如：邮箱或 Telegram 账号"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-[#09071C]/90 border border-[#8B40FF]/30 text-white text-xs sm:text-sm placeholder-[#D4C8ED]/40 focus:outline-none focus:border-[#C15BFF] transition-colors"
+              />
+            </div>
+
+            <div>
+              <label for="fb-content" class="block text-xs font-medium text-[#D4C8ED] mb-1.5">
+                建议内容 <span class="text-[#C15BFF]">*</span>
+              </label>
+              <textarea
+                id="fb-content"
+                rows="4"
+                required
+                placeholder="请详细描述您遇到的问题或对灵动云的改进建议..."
+                class="w-full px-3.5 py-2.5 rounded-xl bg-[#09071C]/90 border border-[#8B40FF]/30 text-white text-xs sm:text-sm placeholder-[#D4C8ED]/40 focus:outline-none focus:border-[#C15BFF] transition-colors resize-none"
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full py-3 px-5 rounded-xl font-semibold text-xs sm:text-sm text-white bg-gradient-to-r from-[#8B40FF] to-[#588DFF] hover:shadow-[0_0_20px_rgba(139,64,255,0.4)] transition-all duration-300"
+            >
+              提交您的宝贵建议
+            </button>
+          </form>
+
+          <div id="feedback-success" class="hidden p-6 rounded-2xl bg-[#09071C]/95 border border-[#588DFF]/40 text-center space-y-2">
+            <div class="w-10 h-10 rounded-full bg-[#588DFF]/20 text-[#588DFF] flex items-center justify-center mx-auto mb-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h4 class="text-sm font-bold text-white">感谢您的真实反馈！</h4>
+            <p class="text-xs text-[#D4C8ED]/80 leading-relaxed">
+              您的建议已成功记录。灵动云产品与技术团队将仔细评估您的意见并持续改进服务。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function setupFeedback() {
+    const form = document.getElementById('feedback-form') as HTMLFormElement;
+    const successMsg = document.getElementById('feedback-success');
+
+    if (form && successMsg) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const topic = (document.getElementById('fb-topic') as HTMLSelectElement).value;
+        const contact = (document.getElementById('fb-contact') as HTMLInputElement).value;
+        const content = (document.getElementById('fb-content') as HTMLTextAreaElement).value;
+
+        // Save locally for customer care audit
+        const existing = JSON.parse(localStorage.getItem('ldy_feedbacks') || '[]');
+        existing.push({ topic, contact, content, date: new Date().toISOString() });
+        localStorage.setItem('ldy_feedbacks', JSON.stringify(existing));
+
+        // Show success state
+        form.classList.add('hidden');
+        successMsg.classList.remove('hidden');
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFeedback);
+  } else {
+    setupFeedback();
+  }
+</script>

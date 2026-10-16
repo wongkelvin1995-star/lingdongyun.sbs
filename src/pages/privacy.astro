@@ -1,0 +1,66 @@
+---
+// privacy.astro: 灵动云隐私政策
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: '首页', path: '/' },
+  { name: '隐私政策', path: '/privacy/' },
+];
+---
+
+<BaseLayout
+  title="隐私政策｜灵动云 LingDongYun 官方网站"
+  description="灵动云官方隐私政策说明，了解我们如何遵循最严格的数据加密与隐私防护原则，保障用户通信安全与个人数据权益。"
+  canonicalPath="/privacy/"
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="my-8 pb-6 border-b border-[#8B40FF]/25">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">灵动云 隐私政策 (Privacy Policy)</h1>
+      <p class="text-xs sm:text-sm text-[#D4C8ED]/75">最后更新日期：2026 年 10 月 16 日 · 灵动云官方发布</p>
+    </header>
+
+    <div class="prose prose-invert prose-purple max-w-none text-[#D4C8ED]/90 space-y-6 text-sm sm:text-base leading-relaxed">
+      <p>
+        灵动云（以下简称“我们”或“灵动云”）深知隐私对每一位用户的重要性。本隐私政策旨在向您清晰、透明地阐述我们如何收集、使用、存储及保护您的个人信息。
+      </p>
+
+      <h2 class="text-xl font-bold text-white mt-8 mb-3 border-b border-[#8B40FF]/20 pb-2">一、我们遵循的无日志与最小化原则</h2>
+      <p>
+        灵动云恪守行业高标准的隐私保护规范：
+      </p>
+      <ul class="list-disc pl-5 space-y-2">
+        <li><strong>不记录浏览内容</strong>：我们绝不监控、记录、抓取或解析您通过代理节点访问的具体网页 URL、搜索关键词、表单输入或下载文件。</li>
+        <li><strong>端到端高强度加密</strong>：所有网络流量依托开源标准的 Shadowsocks 协议及高强度密码学算法传输，节点服务器仅作为数据包中继转发通道。</li>
+        <li><strong>最小化账户信息</strong>：注册时仅需提供用于登录与找回密码的基础邮箱账号，无需任何现实身份实名认证。</li>
+      </ul>
+
+      <h2 class="text-xl font-bold text-white mt-8 mb-3 border-b border-[#8B40FF]/20 pb-2">二、技术运行必需数据的处理</h2>
+      <p>
+        为保障网络加速集群的正常负载均衡与计费统计，系统仅在内存中处理以下必要的技术运行数据：
+      </p>
+      <ul class="list-disc pl-5 space-y-2">
+        <li>当前套餐的总消耗流量与剩余额度（用于套餐计费与限额判断）；</li>
+        <li>同时在线设备连接数的并发计数（用于防范订阅被恶意盗刷）；</li>
+        <li>节点服务器实时的带宽占用率与系统负载率（用于动态路由调度）。</li>
+      </ul>
+
+      <h2 class="text-xl font-bold text-white mt-8 mb-3 border-b border-[#8B40FF]/20 pb-2">三、订阅凭证与账户安全</h2>
+      <p>
+        您的专属订阅链接包含授权密钥。灵动云用户中心提供一键重置功能。若怀疑订阅泄漏，您可随时在后台自助更新密钥，旧订阅将立即失效。
+      </p>
+
+      <h2 class="text-xl font-bold text-white mt-8 mb-3 border-b border-[#8B40FF]/20 pb-2">四、第三方共享禁止承诺</h2>
+      <p>
+        灵动云绝不会向任何第三方数据经纪商、广告商或外部机构出售、转让或出租用户的个人数据。我们所有的服务器集群均由内部工程师直接维护。
+      </p>
+
+      <h2 class="text-xl font-bold text-white mt-8 mb-3 border-b border-[#8B40FF]/20 pb-2">五、隐私政策的修订与联系</h2>
+      <p>
+        本政策可能会根据法律法规或服务更新不时调整。若您对个人隐私保护有任何疑问或建议，欢迎随时登录用户中心提交技术工单与我们取得联系。
+      </p>
+    </div>
+  </div>
+</BaseLayout>

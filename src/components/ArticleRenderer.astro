@@ -1,0 +1,52 @@
+---
+// ArticleRenderer.astro: 灵动云官方统一文章渲染系统
+// 负责安全解析、排版美化、目录生成与全局防 [object Object] 防御
+import { renderMarkdown, extractTableOfContents, normalizeArticleContent } from '../utils/markdown';
+
+interface Props {
+  content: unknown;
+  showToc?: boolean;
+}
+
+const { content, showToc = true } = Astro.props;
+
+// 规范化内容并抽取目录
+const rawMarkdown = normalizeArticleContent(content);
+const tocItems = extractTableOfContents(rawMarkdown);
+const renderedHtml = renderMarkdown(rawMarkdown);
+---
+
+<div class="article-renderer-wrapper space-y-6">
+  {/* 动态文章目录 (TOC) */}
+  {showToc && tocItems.length > 2 && (
+    <nav
+      aria-label="文章目录大纲"
+      class="my-8 p-5 sm:p-6 rounded-2xl bg-[#160C32]/80 border border-[#8B40FF]/30 backdrop-blur-md shadow-md"
+    >
+      <div class="flex items-center gap-2 mb-4 pb-2 border-b border-[#8B40FF]/20 text-white font-bold text-base">
+        <svg class="w-4 h-4 text-[#C15BFF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+        </svg>
+        <span>本文目录导航 (Table of Contents)</span>
+      </div>
+      <ol class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs sm:text-sm">
+        {tocItems.map((item, idx) => (
+          <li>
+            <a
+              href={`#${item.id}`}
+              class="flex items-center gap-2 text-[#D4C8ED] hover:text-[#C15BFF] transition-colors py-1 group"
+            >
+              <span class="w-5 h-5 rounded-full bg-[#8B40FF]/20 text-[#B87AFF] flex items-center justify-center text-[10px] font-mono shrink-0 group-hover:bg-[#8B40FF] group-hover:text-white transition-colors">
+                {idx + 1}
+              </span>
+              <span class="truncate">{item.title}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )}
+
+  {/* 最终语义化 HTML 正文 */}
+  <div class="article-content-body space-y-4" set:html={renderedHtml} />
+</div>

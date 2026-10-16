@@ -1,0 +1,89 @@
+---
+// Features.astro: 第二屏：为什么选择灵动云（六大功能服务模块）
+import { FEATURES_DATA } from '../data/features';
+---
+
+<section id="features" class="py-24 relative z-10 scroll-mt-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#588DFF]/15 border border-[#588DFF]/30 text-xs font-semibold text-[#588DFF] mb-4">
+        <span>服务优势 · 扎实技术底座</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-4">
+        为什么选择 <span class="bg-gradient-to-r from-[#8B40FF] to-[#588DFF] bg-clip-text text-transparent">灵动云</span>？
+      </h2>
+      <p class="text-base sm:text-lg text-[#D4C8ED]/85 leading-relaxed">
+        从高可靠 BGP 多线接入到全平台协议兼容，灵动云以客观严谨的网络工程架构，为你提供持续稳定、低抖动的网络加速体验。
+      </p>
+    </div>
+
+    <!-- 6 Feature Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      {FEATURES_DATA.map((item, index) => (
+        <div
+          class="feature-card group relative p-7 sm:p-8 rounded-2xl bg-[#160C32]/70 border border-[#8B40FF]/25 hover:border-[#C15BFF]/60 hover:bg-[#160C32]/90 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_-5px_rgba(139,64,255,0.3)] flex flex-col justify-between"
+        >
+          <div>
+            <!-- Top Icon & Badge -->
+            <div class="flex items-center justify-between mb-6">
+              <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#8B40FF]/30 to-[#588DFF]/20 border border-[#8B40FF]/40 p-2.5 flex items-center justify-center text-[#B87AFF] group-hover:text-white group-hover:scale-110 group-hover:border-[#C15BFF] transition-all duration-300 shadow-[0_0_15px_rgba(139,64,255,0.25)]">
+                {item.icon === 'network' && (
+                  <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                  </svg>
+                )}
+                {item.icon === 'stability' && (
+                  <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                )}
+                {item.icon === 'media' && (
+                  <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                )}
+                {item.icon === 'ai' && (
+                  <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                )}
+                {item.icon === 'devices' && (
+                  <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                )}
+                {item.icon === 'support' && (
+                  <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                )}
+              </div>
+              <span class="text-[11px] font-semibold px-2.5 py-1 rounded-md bg-[#8B40FF]/20 text-[#C15BFF] border border-[#8B40FF]/30">
+                {item.badge}
+              </span>
+            </div>
+
+            <h3 class="text-xl font-bold text-white mb-3 group-hover:text-[#B87AFF] transition-colors">
+              {item.title}
+            </h3>
+            <p class="text-sm text-[#D4C8ED]/85 leading-relaxed mb-6">
+              {item.description}
+            </p>
+          </div>
+
+          <!-- Feature Bullets -->
+          <ul class="space-y-2 border-t border-[#8B40FF]/20 pt-4 text-xs text-[#D4C8ED]/80">
+            {item.details.map((bullet) => (
+              <li class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#588DFF]"></span>
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

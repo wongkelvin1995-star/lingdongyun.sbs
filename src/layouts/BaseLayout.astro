@@ -1,0 +1,124 @@
+---
+// BaseLayout.astro: 全站通用基底布局
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import NebulaBackground from '../components/NebulaBackground.astro';
+import SearchModal from '../components/SearchModal.astro';
+import { SITE_CONFIG } from '../config/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  canonicalPath?: string;
+  ogType?: string;
+  ogImage?: string;
+  articleMeta?: {
+    publishDate: string;
+    modifyDate: string;
+    author: string;
+  };
+}
+
+const {
+  title = `${SITE_CONFIG.brandName} ${SITE_CONFIG.brandNameEn}｜机场推荐、Clash 节点、科学上网与套餐价格`,
+  description = SITE_CONFIG.description,
+  keywords = SITE_CONFIG.keywords,
+  canonicalPath = '',
+  ogType = 'website',
+  ogImage = 'https://lingdongyun.sbs/og-image.png',
+  articleMeta,
+} = Astro.props;
+
+const canonicalUrl = `https://lingdongyun.sbs${canonicalPath}`;
+
+// Base WebSite & Organization Schema
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: '灵动云 LingDongYun',
+  alternateName: '灵动云',
+  url: 'https://lingdongyun.sbs/',
+  description: description,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://lingdongyun.sbs/?q={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: '灵动云 LingDongYun',
+  url: 'https://lingdongyun.sbs/',
+  logo: 'https://lingdongyun.sbs/favicon.svg',
+  sameAs: ['https://varnexa.lingdongaff.com/#/?code=HHoxxHGa'],
+};
+---
+
+<!doctype html>
+<html lang="zh-CN" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords.join(', ')} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <!-- Open Graph Protocol -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="灵动云 LingDongYun" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="灵动云 LingDongYun 官方品牌主视觉" />
+
+    {articleMeta && (
+      <>
+        <meta property="article:published_time" content={articleMeta.publishDate} />
+        <meta property="article:modified_time" content={articleMeta.modifyDate} />
+        <meta property="article:author" content={articleMeta.author} />
+      </>
+    )}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Structured Data JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+  </head>
+  <body class="bg-[#09071C] text-white selection:bg-[#8B40FF] selection:text-white flex flex-col min-h-screen">
+    <!-- Flowing Ambient Nebula Background -->
+    <NebulaBackground />
+
+    <!-- Global Header -->
+    <Header currentPath={canonicalPath} />
+
+    <!-- Main Page Content -->
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- Global Footer (Strictly without friendship links) -->
+    <Footer />
+
+    <!-- Chinese Search Modal -->
+    <SearchModal />
+  </body>
+</html>

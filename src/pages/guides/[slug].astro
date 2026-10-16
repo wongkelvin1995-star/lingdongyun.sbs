@@ -1,0 +1,23 @@
+---
+// [slug].astro: 静态生成 8 篇官方指南完整页面，使用统一 ArticleRenderer
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import ArticleRenderer from '../../components/ArticleRenderer.astro';
+import { ARTICLES_DATA, type ArticleItem } from '../../data/articles';
+
+export function getStaticPaths() {
+  return ARTICLES_DATA.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: ArticleItem;
+}
+
+const { article } = Astro.props;
+---
+
+<ArticleLayout article={article}>
+  <ArticleRenderer content={article.content} showToc={true} />
+</ArticleLayout>

@@ -1,0 +1,106 @@
+---
+// NebulaBackground.astro: 流动星云背景与粒子环境
+---
+
+<div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden" aria-hidden="true">
+  <!-- Deep Space Base Gradient -->
+  <div class="absolute inset-0 bg-[#09071C]"></div>
+
+  <!-- Ambient Nebula Cloud 1: Primary Purple Top-Right -->
+  <div class="absolute -top-[20%] -right-[15%] w-[70vw] h-[70vw] rounded-full bg-gradient-to-br from-[#8B40FF]/25 via-[#C15BFF]/15 to-transparent blur-[120px] animate-nebula-drift"></div>
+
+  <!-- Ambient Nebula Cloud 2: Neon Blue Middle-Left -->
+  <div class="absolute top-[40%] -left-[20%] w-[65vw] h-[65vw] rounded-full bg-gradient-to-tr from-[#588DFF]/20 via-[#160C32]/40 to-transparent blur-[140px] animate-nebula-drift" style="animation-delay: -6s;"></div>
+
+  <!-- Ambient Nebula Cloud 3: Bright Purple Bottom Center -->
+  <div class="absolute -bottom-[15%] left-[25%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-t from-[#B87AFF]/18 via-[#8B40FF]/10 to-transparent blur-[130px] animate-nebula-drift" style="animation-delay: -12s;"></div>
+
+  <!-- Subtle Cyber Tech Grid Matrix -->
+  <div class="absolute inset-0 opacity-[0.035]" style="background-image: linear-gradient(to right, #8B40FF 1px, transparent 1px), linear-gradient(to bottom, #8B40FF 1px, transparent 1px); background-size: 56px 56px;"></div>
+
+  <!-- Starfield Canvas -->
+  <canvas id="nebula-starfield" class="absolute inset-0 w-full h-full opacity-60"></canvas>
+</div>
+
+<script>
+  function initStarfield() {
+    const canvas = document.getElementById('nebula-starfield') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    // Check prefers-reduced-motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = width < 768;
+    const starCount = isMobile ? 35 : 85;
+
+    interface Star {
+      x: number;
+      y: number;
+      size: number;
+      alpha: number;
+      speed: number;
+      color: string;
+    }
+
+    const stars: Star[] = [];
+    const colors = ['#ffffff', '#D4C8ED', '#C15BFF', '#588DFF', '#B87AFF'];
+
+    for (let i = 0; i < starCount; i++) {
+      stars.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 1.6 + 0.4,
+        alpha: Math.random() * 0.7 + 0.2,
+        speed: (Math.random() * 0.008 + 0.002) * (prefersReducedMotion ? 0 : 1),
+        color: colors[Math.floor(Math.random() * colors.length)],
+      });
+    }
+
+    function render() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        if (!prefersReducedMotion) {
+          s.alpha += s.speed;
+          if (s.alpha > 0.95 || s.alpha < 0.15) {
+            s.speed = -s.speed;
+          }
+        }
+
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = Math.max(0.1, Math.min(1, s.alpha));
+        ctx.fill();
+      }
+
+      if (!prefersReducedMotion) {
+        requestAnimationFrame(render);
+      }
+    }
+
+    render();
+
+    let resizeTimer: any;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }, 200);
+    });
+  }
+
+  // Run when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initStarfield);
+  } else {
+    initStarfield();
+  }
+</script>

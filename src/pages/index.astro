@@ -1,0 +1,219 @@
+---
+// index.astro: 灵动云 LingDongYun 官方品牌官网首页
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroCloud from '../components/HeroCloud.astro';
+import Features from '../components/Features.astro';
+import PricingTable from '../components/PricingTable.astro';
+import GuidesSection from '../components/GuidesSection.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import FeedbackSection from '../components/FeedbackSection.astro';
+import { SITE_CONFIG } from '../config/site';
+import { PLANS_DATA } from '../data/plans';
+
+// Product AggregateOffer JSON-LD Schema
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: '灵动云 LingDongYun 网络加速套餐',
+  description: '灵动云官方九款高品质 BGP 网络加速方案，提供月付、年付、一次性流量包与专属定制通道。',
+  brand: {
+    '@type': 'Brand',
+    name: '灵动云',
+  },
+  offers: {
+    '@type': 'AggregateOffer',
+    priceCurrency: 'CNY',
+    lowPrice: '20',
+    highPrice: '899',
+    offerCount: PLANS_DATA.length.toString(),
+    offers: PLANS_DATA.map((p) => ({
+      '@type': 'Offer',
+      name: p.name,
+      price: p.priceNum.toString(),
+      priceCurrency: 'CNY',
+      availability: 'https://schema.org/InStock',
+      url: SITE_CONFIG.registerUrl,
+    })),
+  },
+};
+---
+
+<BaseLayout
+  title="灵动云 LingDongYun｜机场推荐、Clash 节点、科学上网与套餐价格"
+  description={SITE_CONFIG.description}
+  canonicalPath="/"
+>
+  <!-- 第一屏：Hero Section -->
+  <section class="relative pt-12 pb-20 lg:pt-20 lg:pb-32 overflow-hidden z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <!-- Left Hero Text Content (7 cols on lg) -->
+        <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+          <!-- Brand Badge -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#160C32]/80 border border-[#8B40FF]/40 backdrop-blur-md shadow-[0_0_15px_rgba(139,64,255,0.2)]">
+            <span class="w-2 h-2 rounded-full bg-[#C15BFF] animate-pulse"></span>
+            <span class="text-xs font-semibold text-[#D4C8ED]">
+              灵动星云 · 全球智能连接 · 官方品牌官网
+            </span>
+          </div>
+
+          <!-- Hero Headings -->
+          <div class="space-y-4">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight text-white leading-[1.1]">
+              <span class="block">{SITE_CONFIG.brandName}</span>
+              <span class="block bg-gradient-to-r from-[#C15BFF] via-[#8B40FF] to-[#588DFF] bg-clip-text text-transparent">
+                {SITE_CONFIG.brandNameEn}
+              </span>
+            </h1>
+            <p class="text-2xl sm:text-3xl font-bold text-[#D4C8ED] tracking-wide">
+              {SITE_CONFIG.tagline}
+            </p>
+          </div>
+
+          <!-- Description Text -->
+          <p class="text-base sm:text-lg text-[#D4C8ED]/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+            探索灵动云的网络加速方案，从日常浏览到高流量使用，了解适合不同需求的套餐、Clash 节点配置、全球网络连接和科学上网知识。
+          </p>
+
+          <!-- Primary CTA Buttons -->
+          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+            <!-- Button 1: 查看套餐价格 -->
+            <a
+              href="#pricing"
+              class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-sm sm:text-base text-white bg-gradient-to-r from-[#8B40FF] via-[#C15BFF] to-[#588DFF] shadow-[0_0_25px_rgba(139,64,255,0.4)] hover:shadow-[0_0_35px_rgba(193,91,255,0.7)] hover:scale-105 transition-all duration-300 text-center"
+            >
+              查看套餐价格
+            </a>
+
+            <!-- Button 2: 新手使用教程 -->
+            <a
+              href="#guides"
+              class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-semibold text-sm sm:text-base text-[#D4C8ED] hover:text-white bg-[#160C32]/80 hover:bg-[#8B40FF]/25 border border-[#8B40FF]/40 hover:border-[#8B40FF] backdrop-blur-md transition-all duration-300 text-center"
+            >
+              新手使用教程
+            </a>
+          </div>
+
+          <!-- Key Trust Signals -->
+          <div class="pt-6 border-t border-[#8B40FF]/20 flex items-center justify-center lg:justify-start gap-6 text-xs text-[#D4C8ED]/75">
+            <div class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-[#588DFF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>入门月付 ¥20 起</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-[#588DFF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>年付仅 ¥99 / 全年</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-[#588DFF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>全平台 SS 协议支持</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Hero Visual (5 cols on lg): Dynamic Cyber Cloud Artwork -->
+        <div class="lg:col-span-5 relative flex items-center justify-center">
+          <HeroCloud />
+        </div>
+      </div>
+
+      <!-- Hero Bottom: 4 Service Theme Entrance Cards -->
+      <div id="nodes" class="mt-20 pt-10 border-t border-[#8B40FF]/20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        {SITE_CONFIG.serviceThemes.map((item) => (
+          <a
+            href={item.link}
+            class="group p-5 rounded-2xl bg-[#160C32]/60 hover:bg-[#160C32]/90 border border-[#8B40FF]/25 hover:border-[#C15BFF]/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_25px_rgba(139,64,255,0.25)] flex items-center gap-4"
+          >
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#8B40FF]/30 to-[#588DFF]/20 border border-[#8B40FF]/40 p-2.5 flex items-center justify-center text-[#B87AFF] group-hover:text-white group-hover:scale-105 transition-all">
+              {item.icon === 'network' && (
+                <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              )}
+              {item.icon === 'media' && (
+                <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              )}
+              {item.icon === 'sparkles' && (
+                <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+              )}
+              {item.icon === 'devices' && (
+                <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              )}
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm font-bold text-white group-hover:text-[#C15BFF] transition-colors">
+                {item.title}
+              </span>
+              <span class="text-xs text-[#D4C8ED]/70 mt-0.5 line-clamp-1">
+                {item.subtitle}
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 第二屏：为什么选择灵动云 -->
+  <Features />
+
+  <!-- 第三屏：九款套餐完整展示 -->
+  <PricingTable />
+
+  <!-- 中场 CTA 转化横幅 -->
+  <section class="py-12 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-[#160C32] via-[#24114f] to-[#160C32] border border-[#8B40FF]/40 shadow-[0_15px_50px_rgba(139,64,255,0.3)] flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="space-y-3 text-center md:text-left">
+          <span class="text-xs font-semibold px-3 py-1 rounded-full bg-[#8B40FF]/30 text-[#C15BFF] border border-[#8B40FF]/40 inline-block">
+            安全稳定 · 官方承诺
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">
+            无需繁琐配置，一键导入开启全球智能连接
+          </h2>
+          <p class="text-sm text-[#D4C8ED]/85 max-w-xl">
+            基于 Shadowsocks 现代标准协议，全平台兼容 Windows、macOS、iOS、Android。专业技术团队持续运维保障。
+          </p>
+        </div>
+
+        <div class="shrink-0">
+          <a
+            href={SITE_CONFIG.registerUrl}
+            target="_blank"
+            rel="sponsored noopener noreferrer"
+            class="px-8 py-4 rounded-xl font-bold text-white text-base bg-gradient-to-r from-[#8B40FF] via-[#C15BFF] to-[#588DFF] hover:shadow-[0_0_30px_rgba(193,91,255,0.6)] hover:scale-105 transition-all duration-300 inline-flex items-center gap-2"
+          >
+            <span>立即注册灵动云账号</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 第四屏：精选使用教程与节点科普（8篇SEO文章入口） -->
+  <GuidesSection />
+
+  <!-- 第五屏：常见问题 FAQ（15个具体问答） -->
+  <FaqAccordion />
+
+  <!-- 第六屏：真实用户反馈与意见征集 -->
+  <FeedbackSection />
+</BaseLayout>
+
+<!-- Inject Product / Offer Schema -->
+<script type="application/ld+json" set:html={JSON.stringify(productSchema)} />

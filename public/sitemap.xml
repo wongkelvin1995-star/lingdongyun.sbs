@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- 首页 -->
+  <url>
+    <loc>https://lingdongyun.sbs/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- 文章一：灵动云套餐价格大全 -->
+  <url>
+    <loc>https://lingdongyun.sbs/guides/lingdongyun-plans/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 文章二：2026 机场推荐指南 -->
+  <url>
+    <loc>https://lingdongyun.sbs/guides/airport-selection/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 文章三：Clash 机场入门指南 -->
+  <url>
+    <loc>https://lingdongyun.sbs/guides/clash-airport/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 文章四：Clash Party 使用教程 -->
+  <url>
+    <loc>https://lingdongyun.sbs/guides/clash-party/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 文章五：稳定节点与 BGP 专线解析 -->
+  <url>
+    <loc>https://lingdongyun.sbs/guides/stable-network/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 文章六：安全机场怎么判断 -->
+  <url>
+    <loc>https://lingdongyun.sbs/guides/network-security/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 文章七：全球加速如何工作 -->
+  <url>
+    <loc>https://lingdongyun.sbs/guides/global-acceleration/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 文章八：AI 机场推荐怎么选 -->
+  <url>
+    <loc>https://lingdongyun.sbs/guides/ai-network/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 隐私政策 -->
+  <url>
+    <loc>https://lingdongyun.sbs/privacy/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- 服务条款 -->
+  <url>
+    <loc>https://lingdongyun.sbs/terms/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>

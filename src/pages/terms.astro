@@ -1,0 +1,57 @@
+---
+// terms.astro: 灵动云服务条款
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: '首页', path: '/' },
+  { name: '服务条款', path: '/terms/' },
+];
+---
+
+<BaseLayout
+  title="服务条款｜灵动云 LingDongYun 官方网站"
+  description="灵动云官方服务协议与使用条款，明确用户权利、服务规范、套餐计费说明与免责声明。"
+  canonicalPath="/terms/"
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="my-8 pb-6 border-b border-[#8B40FF]/25">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">灵动云 服务条款 (Terms of Service)</h1>
+      <p class="text-xs sm:text-sm text-[#D4C8ED]/75">生效日期：2026 年 10 月 16 日 · 灵动云官方发布</p>
+    </header>
+
+    <div class="prose prose-invert prose-purple max-w-none text-[#D4C8ED]/90 space-y-6 text-sm sm:text-base leading-relaxed">
+      <p>
+        欢迎使用灵动云（LingDongYun）官方网络加速服务。在注册、订购或使用本服务之前，请务必仔细阅读本服务条款。一旦您完成注册或购买套餐，即视为您完全理解并同意本协议的所有内容。
+      </p>
+
+      <h2 class="text-xl font-bold text-white mt-8 mb-3 border-b border-[#8B40FF]/20 pb-2">一、服务说明与套餐计费</h2>
+      <ul class="list-disc pl-5 space-y-2">
+        <li><strong>套餐规格透明性</strong>：灵动云所有在售套餐的流量、周期与价格均以官方公示为准。月付套餐按月周期计费并刷新流量；年付套餐按月划拨对应配额；一次性流量包不限时清零。</li>
+        <li><strong>网络可用性承诺</strong>：我们将全力保障核心专线节点的平稳运转，但受限于国际海底光缆割接、自然灾害或上游运营商骨干网突发故障，节点可能存在临时维护调度，我们将通过控制台及时发布公告。</li>
+      </ul>
+
+      <h2 class="text-xl font-bold text-white mt-8 mb-3 border-b border-[#8B40FF]/20 pb-2">二、合理使用与合规规范</h2>
+      <p>
+        用户在享受灵动云加速服务时，必须严格遵守以下规范：
+      </p>
+      <ul class="list-disc pl-5 space-y-2">
+        <li>严禁利用灵动云网络节点从事任何形式的网络攻击（如 DDoS、CC 攻击）、端口批量恶意扫描、垃圾邮件群发（SPAM）或非法入侵行为；</li>
+        <li>严禁利用节点从事违法犯罪、侵犯他人知识产权或传播恶意木马病毒；</li>
+        <li>用户需妥善保管个人订阅链接，严禁将订阅链接公开张贴于互联网论坛或作为公开免费节点池，一经发现恶意滥用，系统将自动封禁相应订阅。</li>
+      </ul>
+
+      <h2 class="text-xl font-bold text-white mt-8 mb-3 border-b border-[#8B40FF]/20 pb-2">三、退款与服务变更政策</h2>
+      <p>
+        用户可在服务生效前或符合平台退款指引的前提下通过工单系统申请处理。套餐升级补差价规则将严格按照当月剩余天数与流量使用比例折算。
+      </p>
+
+      <h2 class="text-xl font-bold text-white mt-8 mb-3 border-b border-[#8B40FF]/20 pb-2">四、免责声明</h2>
+      <p>
+        由于第三方软件客户端（如开源 Clash 衍生版本）系独立第三方开源软件开发，灵动云仅提供技术配置教程与标准协议接入支持，不对第三方客户端自身的本地系统兼容性承担连带责任。
+      </p>
+    </div>
+  </div>
+</BaseLayout>

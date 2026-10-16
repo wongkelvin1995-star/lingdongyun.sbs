@@ -1,0 +1,112 @@
+---
+// Footer.astro: 灵动云官方统一页脚
+// 严格禁令：严禁添加任何“友情链接”、严禁添加任何第三方测评站与外部竞品链接
+import { SITE_CONFIG } from '../config/site';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="w-full bg-[#060414] border-t border-[#8B40FF]/25 pt-16 pb-12 text-[#D4C8ED] relative z-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 pb-12 border-b border-[#8B40FF]/15">
+      <!-- Col 1 & 2: Brand Info -->
+      <div class="lg:col-span-2 space-y-4">
+        <a href="/" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-[#8B40FF] rounded-lg w-fit">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8B40FF]/30 to-[#588DFF]/20 p-[1.5px] border border-[#8B40FF]/40 shadow-[0_0_15px_rgba(139,64,255,0.3)] flex items-center justify-center">
+            <svg class="w-6 h-6" viewBox="0 0 64 64" fill="none">
+              <defs>
+                <linearGradient id="footerLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#C15BFF" />
+                  <stop offset="50%" stop-color="#8B40FF" />
+                  <stop offset="100%" stop-color="#588DFF" />
+                </linearGradient>
+              </defs>
+              <path d="M22 38h20a8 8 0 0 0 2-15.7A10 10 0 0 0 25.5 19 8 8 0 0 0 20 28.5 7 7 0 0 0 22 38z" fill="url(#footerLogoGrad)" opacity="0.9" />
+              <ellipse cx="32" cy="34" rx="20" ry="8" stroke="#588DFF" stroke-width="1.8" stroke-dasharray="4 3" opacity="0.8" transform="rotate(-15 32 34)" />
+              <circle cx="21" cy="28" r="2.5" fill="#FFFFFF" />
+              <circle cx="32" cy="22" r="2.5" fill="#FFFFFF" />
+              <circle cx="41" cy="31" r="2.5" fill="#FFFFFF" />
+            </svg>
+          </div>
+          <div>
+            <span class="text-xl font-bold text-white tracking-tight">{SITE_CONFIG.brandName}</span>
+            <span class="block text-[11px] font-medium text-[#588DFF] uppercase tracking-wider">{SITE_CONFIG.brandNameEn}</span>
+          </div>
+        </a>
+
+        <p class="text-sm leading-relaxed text-[#D4C8ED]/80 max-w-sm">
+          {SITE_CONFIG.brandName}是专注于全球智能连接的官方品牌。提供低延迟 BGP 专线、透明的阶梯套餐与标准的 Shadowsocks 协议支持，赋能跨国办公、科研学术与高质量多媒体娱乐。
+        </p>
+
+        <div class="pt-2 text-xs text-[#D4C8ED]/60 space-y-1">
+          <p>官方域名：<span class="text-white font-mono">https://lingdongyun.sbs/</span></p>
+          <p>服务承诺：透明资费 · 稳定节点 · 真实数据</p>
+        </div>
+      </div>
+
+      <!-- Col 3: Navigation -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-semibold text-white tracking-wider uppercase">网站导航</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/" class="hover:text-white hover:underline transition-colors">官网首页</a></li>
+          <li><a href="/#pricing" class="hover:text-white hover:underline transition-colors">套餐价格</a></li>
+          <li><a href="/#features" class="hover:text-white hover:underline transition-colors">服务优势</a></li>
+          <li><a href="/#guides" class="hover:text-white hover:underline transition-colors">新手教程</a></li>
+          <li><a href="/#nodes" class="hover:text-white hover:underline transition-colors">节点知识</a></li>
+          <li><a href="/#faq" class="hover:text-white hover:underline transition-colors">常见问题 (FAQ)</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Hot Guides -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-semibold text-white tracking-wider uppercase">精选使用指南</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/guides/lingdongyun-plans/" class="hover:text-white hover:underline transition-colors">九款套餐价格选购</a></li>
+          <li><a href="/guides/clash-party/" class="hover:text-white hover:underline transition-colors">Clash Party 图文教程</a></li>
+          <li><a href="/guides/clash-airport/" class="hover:text-white hover:underline transition-colors">Clash 节点与代理模式</a></li>
+          <li><a href="/guides/stable-network/" class="hover:text-white hover:underline transition-colors">BGP 专线与延迟解析</a></li>
+          <li><a href="/guides/ai-network/" class="hover:text-white hover:underline transition-colors">ChatGPT 与流媒体连接</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 5: Support & Legal -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-semibold text-white tracking-wider uppercase">服务与支持</h3>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a
+              href={SITE_CONFIG.registerUrl}
+              target="_blank"
+              rel="sponsored noopener noreferrer"
+              class="text-[#C15BFF] hover:text-[#B87AFF] font-medium flex items-center gap-1"
+            >
+              <span>用户注册中心</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </li>
+          <li><a href="/#feedback" class="hover:text-white hover:underline transition-colors">用户反馈与建议</a></li>
+          <li><a href="/privacy/" class="hover:text-white hover:underline transition-colors">隐私政策</a></li>
+          <li><a href="/terms/" class="hover:text-white hover:underline transition-colors">服务条款</a></li>
+          <li class="pt-2 text-xs text-[#D4C8ED]/60">
+            <span>官方支持：</span><br />
+            <span>登录控制台提交 1 对 1 工单</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#D4C8ED]/60 gap-4">
+      <p>© {currentYear} {SITE_CONFIG.brandName} ({SITE_CONFIG.brandNameEn}). 保留所有权利。</p>
+      <div class="flex items-center gap-6">
+        <a href="/privacy/" class="hover:text-white transition-colors">隐私保护说明</a>
+        <span class="text-[#8B40FF]/40">·</span>
+        <a href="/terms/" class="hover:text-white transition-colors">服务协议</a>
+        <span class="text-[#8B40FF]/40">·</span>
+        <span>官方纯净品牌认证</span>
+      </div>
+    </div>
+  </div>
+</footer>
