@@ -155,12 +155,14 @@ import { SITE_CONFIG } from '../config/site';
 
 <!-- CSS to Hide Default Crisp Circular Launcher -->
 <style is:global>
-  /* Completely hide native Crisp default circular blue button, use our dynamic tech cloud instead */
+  /* 彻底消除 Crisp 原生默认的蓝色圆形按钮，仅保留灵动云专属紫色科技云端图标 */
   .crisp-client .cc-tlyq,
   .crisp-client [data-chat-status="closed"] .cc-1x8g,
   .crisp-client .cc-1x8g,
   .crisp-client .cc-1m8g,
-  .crisp-client .cc-unoo {
+  .crisp-client .cc-unoo,
+  .crisp-client [data-is-launcher-hidden="true"],
+  .crisp-client [data-chat-status="closed"] {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
@@ -173,12 +175,18 @@ import { SITE_CONFIG } from '../config/site';
     const launcher = document.getElementById('crisp-custom-launcher');
     if (!launcher) return;
 
-    function openChat() {
+    function toggleChat() {
       if (typeof window !== 'undefined') {
         const crisp = (window as any).$crisp;
         if (crisp && typeof crisp.push === 'function') {
-          // Toggle or open Crisp Chat
-          crisp.push(['do', 'chat:toggle']);
+          // If already open, close it and hide native launcher
+          if (crisp.is && crisp.is('chat:opened')) {
+            crisp.push(['do', 'chat:close']);
+            crisp.push(['do', 'chat:hide']);
+          } else {
+            crisp.push(['do', 'chat:show']);
+            crisp.push(['do', 'chat:open']);
+          }
           return;
         }
       }
@@ -186,17 +194,21 @@ import { SITE_CONFIG } from '../config/site';
       window.open('https://go.crisp.chat/chat/embed/?website_id=8bffea93-cf2b-46e3-835e-302ed40c86fa', '_blank', 'noopener,noreferrer');
     }
 
-    launcher.addEventListener('click', openChat);
+    launcher.addEventListener('click', toggleChat);
     launcher.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        openChat();
+        toggleChat();
       }
     });
 
-    // When Crisp finishes loading, enforce hide:launcher
+    // Ensure Crisp hides its default launcher on startup & close
     if (typeof window !== 'undefined' && (window as any).$crisp) {
-      (window as any).$crisp.push(['config', 'chat:hide:launcher', true]);
+      const crisp = (window as any).$crisp;
+      crisp.push(['do', 'chat:hide']);
+      crisp.push(['on', 'chat:closed', () => {
+        crisp.push(['do', 'chat:hide']);
+      }]);
     }
   }
 

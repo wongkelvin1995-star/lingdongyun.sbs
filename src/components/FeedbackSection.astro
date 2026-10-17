@@ -152,6 +152,7 @@ import { SITE_CONFIG } from '../config/site';
             crisp.push(['do', 'message:send', ['text', initialMessage.trim()]]);
           }
           // Open the Crisp chat box
+          crisp.push(['do', 'chat:show']);
           crisp.push(['do', 'chat:open']);
           return;
         }

@@ -129,7 +129,10 @@ const orgSchema = {
     <script type="text/javascript" is:inline define:vars={{ crispWebsiteId: SITE_CONFIG.crispWebsiteId }}>
       window.$crisp = [];
       window.CRISP_WEBSITE_ID = crispWebsiteId;
-      window.$crisp.push(["config", "chat:hide:launcher", true]);
+      window.$crisp.push(["do", "chat:hide"]);
+      window.$crisp.push(["on", "chat:closed", function () {
+        window.$crisp.push(["do", "chat:hide"]);
+      }]);
       (function () {
         var d = document;
         var s = d.createElement("script");
