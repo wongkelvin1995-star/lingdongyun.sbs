@@ -5,6 +5,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import NebulaBackground from '../components/NebulaBackground.astro';
 import SearchModal from '../components/SearchModal.astro';
+import CrispFloatingWidget from '../components/CrispFloatingWidget.astro';
 import { SITE_CONFIG } from '../config/site';
 
 interface Props {
@@ -121,10 +122,14 @@ const orgSchema = {
     <!-- Chinese Search Modal -->
     <SearchModal />
 
+    <!-- Custom Dynamic Tech Cloud Crisp Launcher -->
+    <CrispFloatingWidget />
+
     <!-- Crisp Live Chat Widget -->
     <script type="text/javascript" is:inline define:vars={{ crispWebsiteId: SITE_CONFIG.crispWebsiteId }}>
       window.$crisp = [];
       window.CRISP_WEBSITE_ID = crispWebsiteId;
+      window.$crisp.push(["config", "chat:hide:launcher", true]);
       (function () {
         var d = document;
         var s = d.createElement("script");

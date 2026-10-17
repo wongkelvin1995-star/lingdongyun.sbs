@@ -1,0 +1,208 @@
+---
+// CrispFloatingWidget.astro: 灵动云专属动态科技云端 Crisp 在线客服悬浮按钮
+// 替代默认圆形气泡，采用与品牌主视觉一致的“动态科技云朵 + 未来城市 + 环绕光轨”
+import { SITE_CONFIG } from '../config/site';
+---
+
+<!-- Custom Floating Crisp Launcher -->
+<div
+  id="crisp-custom-launcher"
+  class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 group cursor-pointer select-none transition-transform duration-300 hover:scale-105"
+  role="button"
+  tabindex="0"
+  aria-label="打开灵动云 Crisp 在线客服"
+>
+  <!-- Ambient Radial Glow on Hover -->
+  <div
+    class="absolute inset-0 rounded-full bg-gradient-to-tr from-[#C15BFF]/40 via-[#8B40FF]/50 to-[#588DFF]/40 blur-xl opacity-75 group-hover:opacity-100 group-hover:blur-2xl transition-all duration-300 pointer-events-none"
+  ></div>
+
+  <!-- Cloud Container -->
+  <div class="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center drop-shadow-[0_10px_25px_rgba(139,64,255,0.6)]">
+    <!-- SVG Cloud + Future City Artwork -->
+    <svg
+      viewBox="0 0 600 600"
+      class="w-full h-full animate-float-slow"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <!-- Gradients -->
+        <linearGradient id="crispCloudGrad" x1="120" y1="180" x2="480" y2="440" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#C15BFF" stop-opacity="0.95" />
+          <stop offset="45%" stop-color="#8B40FF" stop-opacity="0.9" />
+          <stop offset="85%" stop-color="#160C32" stop-opacity="0.95" />
+          <stop offset="100%" stop-color="#588DFF" stop-opacity="0.85" />
+        </linearGradient>
+
+        <linearGradient id="crispCityGrad" x1="300" y1="200" x2="300" y2="420" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+          <stop offset="50%" stop-color="#B87AFF" stop-opacity="0.7" />
+          <stop offset="100%" stop-color="#160C32" stop-opacity="0.95" />
+        </linearGradient>
+
+        <linearGradient id="crispRailGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#C15BFF" />
+          <stop offset="50%" stop-color="#588DFF" />
+          <stop offset="100%" stop-color="#B87AFF" />
+        </linearGradient>
+
+        <!-- Filters -->
+        <filter id="crispGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="6" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+
+        <filter id="crispNodeGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+
+      <!-- Main Cloud Hull -->
+      <path
+        d="M225 210 C185 210 152 242 152 282 C152 288 153 294 156 300 C130 312 112 338 112 368 C112 412 148 448 192 448 L418 448 C462 448 498 412 498 368 C498 335 476 307 444 298 C447 291 448 284 448 276 C448 228 409 188 360 188 C332 188 307 200 290 220 C274 200 250 188 225 188 C215 188 205 190 196 194 C190 204 186 215 186 226 Z"
+        fill="url(#crispCloudGrad)"
+        stroke="#C15BFF"
+        stroke-width="3"
+        filter="url(#crispGlow)"
+      />
+
+      <!-- City Buildings Silhouettes inside Cloud -->
+      <g opacity="0.9">
+        <!-- Left Building -->
+        <rect x="235" y="270" width="20" height="110" fill="url(#crispCityGrad)" rx="2" />
+        <line x1="245" y1="248" x2="245" y2="270" stroke="#588DFF" stroke-width="2" />
+        <circle cx="245" cy="246" r="3" fill="#588DFF" filter="url(#crispNodeGlow)" />
+        <rect x="239" y="282" width="4" height="4" fill="#FFFFFF" />
+        <rect x="247" y="282" width="4" height="4" fill="#588DFF" />
+        <rect x="239" y="296" width="4" height="4" fill="#B87AFF" />
+        <rect x="247" y="296" width="4" height="4" fill="#FFFFFF" />
+
+        <!-- Central High Spire (Center of Cloud) -->
+        <polygon points="295,195 315,195 322,380 288,380" fill="url(#crispCityGrad)" />
+        <line x1="305" y1="155" x2="305" y2="195" stroke="#C15BFF" stroke-width="2.5" />
+        <circle cx="305" cy="153" r="4" fill="#FFFFFF" filter="url(#crispNodeGlow)" />
+        <!-- Spire Pulse Ring -->
+        <circle cx="305" cy="153" r="10" stroke="#C15BFF" stroke-width="1.5" stroke-dasharray="3 3" class="animate-pulse" />
+
+        <!-- Right Tower -->
+        <rect x="345" y="255" width="26" height="125" fill="url(#crispCityGrad)" rx="2" />
+        <line x1="358" y1="225" x2="358" y2="255" stroke="#588DFF" stroke-width="2" />
+        <circle cx="358" cy="223" r="3" fill="#588DFF" filter="url(#crispNodeGlow)" />
+        <rect x="351" y="268" width="5" height="4" fill="#FFFFFF" />
+        <rect x="360" y="268" width="5" height="4" fill="#588DFF" />
+        <rect x="351" y="282" width="5" height="4" fill="#B87AFF" />
+        <rect x="360" y="282" width="5" height="4" fill="#FFFFFF" />
+
+        <!-- Mid fillers -->
+        <rect x="262" y="300" width="26" height="80" fill="url(#crispCityGrad)" opacity="0.8" rx="1" />
+        <rect x="325" y="295" width="18" height="85" fill="url(#crispCityGrad)" opacity="0.8" rx="1" />
+      </g>
+
+      <!-- Connecting Circuit Lines -->
+      <path d="M190 380 L240 380 L270 340 L340 340 L370 380 L420 380" stroke="#588DFF" stroke-width="2" stroke-dasharray="5 4" opacity="0.8" />
+      <path d="M280 290 L305 250 L340 250 L360 290" stroke="#C15BFF" stroke-width="2" opacity="0.75" />
+
+      <!-- Glowing Data Nodes -->
+      <circle cx="210" cy="350" r="5" fill="#FFFFFF" filter="url(#crispNodeGlow)" />
+      <circle cx="270" cy="340" r="6" fill="#588DFF" filter="url(#crispNodeGlow)" />
+      <circle cx="340" cy="340" r="6" fill="#C15BFF" filter="url(#crispNodeGlow)" />
+      <circle cx="305" cy="275" r="7" fill="#B87AFF" filter="url(#crispNodeGlow)" />
+      <circle cx="410" cy="360" r="5" fill="#FFFFFF" filter="url(#crispNodeGlow)" />
+
+      <!-- Flowing Dynamic Orbit Rings -->
+      <g class="animate-orbit" style="transform-origin: 300px 320px;">
+        <ellipse cx="300" cy="320" rx="230" ry="85" stroke="url(#crispRailGrad)" stroke-width="3" stroke-dasharray="40 180" transform="rotate(-25 300 320)" opacity="0.9" filter="url(#crispGlow)" />
+        <g transform="rotate(-25 300 320)">
+          <circle cx="530" cy="320" r="6" fill="#FFFFFF" filter="url(#crispNodeGlow)" />
+        </g>
+      </g>
+
+      <g class="animate-orbit-reverse" style="transform-origin: 300px 320px;">
+        <ellipse cx="300" cy="320" rx="245" ry="95" stroke="url(#crispRailGrad)" stroke-width="2.5" stroke-dasharray="60 160" transform="rotate(35 300 320)" opacity="0.85" filter="url(#crispGlow)" />
+        <g transform="rotate(35 300 320)">
+          <circle cx="70" cy="320" r="5" fill="#588DFF" filter="url(#crispNodeGlow)" />
+        </g>
+      </g>
+
+      <!-- Sparkles -->
+      <circle cx="160" cy="180" r="3" fill="#FFFFFF" class="animate-ping" style="animation-duration: 3s;" />
+      <circle cx="460" cy="190" r="3" fill="#588DFF" class="animate-ping" style="animation-duration: 4s;" />
+    </svg>
+
+    <!-- Green Online Status Pill Badge -->
+    <div class="absolute top-0 right-0 sm:top-1 sm:right-1 flex items-center justify-center">
+      <span class="relative flex h-3.5 w-3.5">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-[#09071C] shadow-[0_0_8px_#10b981]"></span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Tooltip on Hover -->
+  <div
+    class="hidden sm:block absolute right-full top-1/2 -translate-y-1/2 mr-3 px-3 py-1.5 rounded-xl bg-[#160C32]/95 border border-[#8B40FF]/40 text-xs font-semibold text-white whitespace-nowrap shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none transform translate-x-2 group-hover:translate-x-0"
+  >
+    <div class="flex items-center gap-1.5">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span>灵动云 Crisp 在线客服</span>
+    </div>
+    <!-- Arrow -->
+    <div class="absolute top-1/2 right-0 transform translate-x-1 -translate-y-1/2 w-2 h-2 bg-[#160C32] border-t border-r border-[#8B40FF]/40 rotate-45"></div>
+  </div>
+</div>
+
+<!-- CSS to Hide Default Crisp Circular Launcher -->
+<style is:global>
+  /* Completely hide native Crisp default circular blue button, use our dynamic tech cloud instead */
+  .crisp-client .cc-tlyq,
+  .crisp-client [data-chat-status="closed"] .cc-1x8g,
+  .crisp-client .cc-1x8g,
+  .crisp-client .cc-1m8g,
+  .crisp-client .cc-unoo {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+</style>
+
+<script>
+  function setupCrispLauncher() {
+    const launcher = document.getElementById('crisp-custom-launcher');
+    if (!launcher) return;
+
+    function openChat() {
+      if (typeof window !== 'undefined') {
+        const crisp = (window as any).$crisp;
+        if (crisp && typeof crisp.push === 'function') {
+          // Toggle or open Crisp Chat
+          crisp.push(['do', 'chat:toggle']);
+          return;
+        }
+      }
+      // Fallback
+      window.open('https://go.crisp.chat/chat/embed/?website_id=8bffea93-cf2b-46e3-835e-302ed40c86fa', '_blank', 'noopener,noreferrer');
+    }
+
+    launcher.addEventListener('click', openChat);
+    launcher.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openChat();
+      }
+    });
+
+    // When Crisp finishes loading, enforce hide:launcher
+    if (typeof window !== 'undefined' && (window as any).$crisp) {
+      (window as any).$crisp.push(['config', 'chat:hide:launcher', true]);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupCrispLauncher);
+  } else {
+    setupCrispLauncher();
+  }
+</script>
