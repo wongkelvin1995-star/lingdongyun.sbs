@@ -10,6 +10,8 @@ export const SITE_CONFIG = {
   siteUrl: 'https://lingdongyun.sbs',
   registerUrl: 'https://varnexa.lingdongaff.com/#/?code=HHoxxHGa',
   affCode: 'HHoxxHGa',
+  crispWebsiteId: '8bffea93-cf2b-46e3-835e-302ed40c86fa',
+  crispChatUrl: 'https://go.crisp.chat/chat/embed/?website_id=8bffea93-cf2b-46e3-835e-302ed40c86fa',
   tagline: '让网络连接更自由',
   slogan: '灵动星云 · 全球智能连接',
   description: '灵动云 LingDongYun 官方网站，了解 ¥20 月付、¥99 年付及多种流量套餐，查看 Clash 节点、科学上网、稳定节点、全球加速和 AI 网络使用教程。',
