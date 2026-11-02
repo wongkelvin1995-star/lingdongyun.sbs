@@ -1,9 +1,12 @@
 ---
-// BaseLayout.astro: 全站通用基底布局
+// BaseLayout.astro: 灵动云帮助中心通用布局（深紫底色、页头页脚、搜索弹窗与 Crisp 在线客服）
 import '../styles/global.css';
 import Header from '../components/Header.astro';
+import GlobalNav from '../components/GlobalNav.astro';
+import MotionHead from '../components/MotionHead.astro';
+import MotionIntro from '../components/MotionIntro.astro';
+import MotionReveal from '../components/MotionReveal.astro';
 import Footer from '../components/Footer.astro';
-import NebulaBackground from '../components/NebulaBackground.astro';
 import SearchModal from '../components/SearchModal.astro';
 import CrispFloatingWidget from '../components/CrispFloatingWidget.astro';
 import { SITE_CONFIG } from '../config/site';
@@ -11,51 +14,50 @@ import { SITE_CONFIG } from '../config/site';
 interface Props {
   title?: string;
   description?: string;
-  keywords?: string[];
   canonicalPath?: string;
   ogType?: string;
   ogImage?: string;
-  articleMeta?: {
-    publishDate: string;
-    modifyDate: string;
-    author: string;
-  };
+  noindex?: boolean;
+  /** 文章修改时间（用于 article:modified_time） */
+  modifiedTime?: string;
+  /** 页面专属的结构化数据节点，会与 Organization / WebSite 合并为一个 @graph */
+  jsonLd?: Record<string, unknown>[];
 }
 
 const {
-  title = `${SITE_CONFIG.brandName} ${SITE_CONFIG.brandNameEn}｜机场推荐、Clash 节点、科学上网与套餐价格`,
+  title = '灵动云帮助中心｜连接问题排查、网络知识与在线客服',
   description = SITE_CONFIG.description,
-  keywords = SITE_CONFIG.keywords,
   canonicalPath = '',
   ogType = 'website',
-  ogImage = 'https://lingdongyun.sbs/og-image.png',
-  articleMeta,
+  ogImage = SITE_CONFIG.ogImage,
+  modifiedTime,
+  jsonLd = [],
+  noindex = false,
 } = Astro.props;
 
-const canonicalUrl = `https://lingdongyun.sbs${canonicalPath}`;
+const canonicalUrl = `${SITE_CONFIG.siteUrl}${canonicalPath}`;
 
-// Base WebSite & Organization Schema
-const websiteSchema = {
+// 结构化数据：Organization 只引用官网的 @id；WebSite 为本站
+const graph = {
   '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: '灵动云 LingDongYun',
-  alternateName: '灵动云',
-  url: 'https://lingdongyun.sbs/',
-  description: description,
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: 'https://lingdongyun.sbs/?q={search_term_string}',
-    'query-input': 'required name=search_term_string',
-  },
-};
-
-const orgSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: '灵动云 LingDongYun',
-  url: 'https://lingdongyun.sbs/',
-  logo: 'https://lingdongyun.sbs/favicon.svg',
-  sameAs: ['https://varnexa.lingdongaff.com/#/?code=HHoxxHGa'],
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': SITE_CONFIG.orgId,
+      name: '灵动云',
+      url: SITE_CONFIG.officialSiteUrl,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': SITE_CONFIG.websiteId,
+      url: `${SITE_CONFIG.siteUrl}/`,
+      name: SITE_CONFIG.siteName,
+      description: SITE_CONFIG.description,
+      inLanguage: 'zh-CN',
+      publisher: { '@id': SITE_CONFIG.orgId },
+    },
+    ...jsonLd,
+  ],
 };
 ---
 
@@ -64,68 +66,63 @@ const orgSchema = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- 出场动态：判断是否播放 + 样式（tools/motion.py） -->
+    <MotionHead />
+    <link rel="icon" href="/favicon.ico?v=20261101" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20261101" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=20261101" />
+    <meta name="theme-color" content="#0B0820" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- SEO Meta Tags -->
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content={keywords.join(', ')} />
-    <link rel="canonical" href={canonicalUrl} />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    {noindex ? (
+      <meta name="robots" content="noindex" />
+    ) : (
+      <>
+        <link rel="canonical" href={canonicalUrl} />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+      </>
+    )}
 
-    <!-- Open Graph Protocol -->
+    <!-- Open Graph -->
     <meta property="og:type" content={ogType} />
-    <meta property="og:site_name" content="灵动云 LingDongYun" />
+    <meta property="og:site_name" content={SITE_CONFIG.siteName} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonicalUrl} />
+    {!noindex && <meta property="og:url" content={canonicalUrl} />}
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="灵动云 LingDongYun 官方品牌主视觉" />
+    <meta property="og:image:alt" content="灵动云帮助中心：连接问题排查、网络知识与在线客服" />
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
 
-    {articleMeta && (
-      <>
-        <meta property="article:published_time" content={articleMeta.publishDate} />
-        <meta property="article:modified_time" content={articleMeta.modifyDate} />
-        <meta property="article:author" content={articleMeta.author} />
-      </>
-    )}
-
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <!-- Structured Data JSON-LD -->
-    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
-    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+    <!-- 悬停或按下链接时预先加载同站页面，点击后打开更快（只在支持的浏览器生效） -->
+    <script type="speculationrules" is:inline set:html={"{\"prefetch\":[{\"where\":{\"and\":[{\"href_matches\":\"/*\"},{\"not\":{\"selector_matches\":\"[target=_blank], [download], [rel~=nofollow]\"}}]},\"eagerness\":\"moderate\"}]}"}></script>
   </head>
-  <body class="bg-[#09071C] text-white selection:bg-[#8B40FF] selection:text-white flex flex-col min-h-screen">
-    <!-- Flowing Ambient Nebula Background -->
-    <NebulaBackground />
+  <body class="flex min-h-screen flex-col bg-night text-ink">
+    <MotionIntro />
+    <GlobalNav />
+    <Header />
 
-    <!-- Global Header -->
-    <Header currentPath={canonicalPath} />
-
-    <!-- Main Page Content -->
-    <main class="flex-grow">
+    <main id="main" class="flex-grow">
       <slot />
     </main>
 
-    <!-- Global Footer (Strictly without friendship links) -->
     <Footer />
 
-    <!-- Chinese Search Modal -->
     <SearchModal />
 
-    <!-- Custom Dynamic Tech Cloud Crisp Launcher -->
     <CrispFloatingWidget />
 
-    <!-- Crisp Live Chat Widget -->
+    <!-- Crisp 在线客服：加载后保持隐藏，只有点击客服入口时才打开 -->
     <script type="text/javascript" is:inline define:vars={{ crispWebsiteId: SITE_CONFIG.crispWebsiteId }}>
       window.$crisp = [];
       window.CRISP_WEBSITE_ID = crispWebsiteId;
@@ -141,5 +138,6 @@ const orgSchema = {
         d.getElementsByTagName("head")[0].appendChild(s);
       })();
     </script>
+    <MotionReveal />
   </body>
 </html>

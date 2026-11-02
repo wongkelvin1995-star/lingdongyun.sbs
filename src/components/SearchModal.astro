@@ -1,72 +1,109 @@
 ---
-// SearchModal.astro: 真实可用的中文全站搜索弹窗组件
+// SearchModal.astro: 帮助中心站内搜索弹窗（纯前端，检索排查步骤、网络知识文章与客服入口）
 import { ARTICLES_DATA } from '../data/articles';
 
-// Prepare search index
-const searchIndex = ARTICLES_DATA.map((art) => ({
-  title: art.title,
-  path: art.path,
-  category: art.category,
-  readTime: art.readTime,
-  summary: art.summary,
-  keywords: art.keywords.join(' '),
-}));
+// 症状直达：排查文章内的锚点
+const symptomEntries = [
+  {
+    title: '订阅更新失败：报错、节点列表为空或提示格式错误',
+    path: '/guides/troubleshooting/#update-failed',
+    category: '排查步骤',
+    readTime: '直达小节',
+    summary: '确认套餐状态，重新复制订阅链接，核对订阅格式与客户端是否匹配，换网络或更新客户端后再试。',
+    keywords: '订阅 更新 失败 下载 格式 错误 解析 导入 节点列表 空白 404',
+  },
+  {
+    title: '节点超时或连不上：全部超时、已连接却打不开网页',
+    path: '/guides/troubleshooting/#timeout',
+    category: '排查步骤',
+    readTime: '直达小节',
+    summary: '先分清全部超时还是部分超时，再检查本地网络、系统时间、软件冲突、系统代理与 DNS。',
+    keywords: '连不上 超时 timeout 无法连接 打不开 系统代理 时间 dns 插件 冲突',
+  },
+  {
+    title: '速度慢或不稳定：晚高峰变慢、视频缓冲、延迟忽高忽低',
+    path: '/guides/troubleshooting/#slow',
+    category: '排查步骤',
+    readTime: '直达小节',
+    summary: '换同地区节点，区分延迟与带宽，关注晚高峰表现，检查本地网络并保持规则模式。',
+    keywords: '慢 速度 卡顿 缓冲 晚上 晚高峰 延迟 不稳定 掉线',
+  },
+  {
+    title: '流量用完或套餐到期：额度规则与处理办法',
+    path: '/guides/troubleshooting/#quota',
+    category: '排查步骤',
+    readTime: '直达小节',
+    summary: '月付按周期重置，年付每 30 天重置，一次性流量包用完为止；流量消耗异常时检查模式与订阅链接。',
+    keywords: '流量 用完 不足 到期 过期 续费 重置 额度 套餐',
+  },
+  {
+    title: '在线客服与工单：怎样联系灵动云',
+    path: '/#support',
+    category: '联系支持',
+    readTime: '首页',
+    summary: '领取订阅链接，或排查后仍未解决：点击「联系在线客服」打开 Crisp 对话，或登录用户中心提交工单；说明设备、客户端名称和版本。',
+    keywords: '客服 工单 联系 人工 售后 crisp 反馈 投诉 订阅链接 领取 获取 clash 通用 小火箭',
+  },
+];
+
+const searchIndex = [
+  ...symptomEntries,
+  ...ARTICLES_DATA.map((art) => ({
+    title: art.title,
+    path: art.path,
+    category: art.category,
+    readTime: art.readTime,
+    summary: art.description,
+    keywords: art.keywords.join(' '),
+  })),
+];
 ---
 
 <div
   id="search-dialog"
-  class="fixed inset-0 z-50 hidden flex items-start justify-center pt-20 px-4 sm:px-6"
+  class="fixed inset-0 z-[60] hidden flex items-start justify-center px-4 pt-16 sm:px-6 sm:pt-[12vh]"
   role="dialog"
   aria-modal="true"
-  aria-labelledby="search-modal-title"
+  aria-label="搜索帮助中心"
 >
-  <!-- Backdrop -->
-  <div id="search-backdrop" class="fixed inset-0 bg-[#09071C]/80 backdrop-blur-md transition-opacity"></div>
+  <div id="search-backdrop" class="search-backdrop fixed inset-0"></div>
 
-  <!-- Modal Box -->
-  <div class="relative w-full max-w-2xl rounded-2xl bg-[#160C32] border border-[#8B40FF]/50 shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200">
-    <!-- Input Header -->
-    <div class="flex items-center px-4 py-3.5 border-b border-[#8B40FF]/25">
-      <svg class="w-5 h-5 text-[#B87AFF] shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+  <div class="search-panel relative z-10 w-full max-w-2xl">
+    <div class="flex items-center gap-3 border-b border-line py-2 pl-4 pr-2">
+      <svg class="h-5 w-5 shrink-0 text-lilac" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="6.5" /><path d="m20 20-4.4-4.4" />
       </svg>
       <input
         id="search-input"
-        type="text"
-        placeholder="输入关键词搜索教程（例如：Clash、¥20套餐、BGP专线、ChatGPT）..."
-        class="w-full bg-transparent text-white placeholder-[#D4C8ED]/40 text-sm focus:outline-none"
+        type="search"
+        placeholder="输入遇到的问题，例如：订阅更新失败、超时、ChatGPT"
+        aria-label="搜索关键词"
+        class="min-h-11 w-full bg-transparent text-base text-ink placeholder:text-ink-3 focus:outline-none sm:text-[0.9375rem]"
         autocomplete="off"
       />
       <button
         id="search-close-btn"
         type="button"
-        class="p-1.5 text-[#D4C8ED]/60 hover:text-white rounded-lg hover:bg-[#8B40FF]/20 transition-colors"
+        class="grid h-11 w-11 shrink-0 place-items-center rounded-ctl text-ink-3 transition-colors hover:bg-lilac/10 hover:text-ink"
         aria-label="关闭搜索"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18" />
         </svg>
       </button>
     </div>
 
-    <!-- Quick Tags -->
-    <div class="px-4 py-2.5 bg-[#09071C]/60 border-b border-[#8B40FF]/15 flex items-center gap-2 overflow-x-auto text-xs text-[#D4C8ED]/75">
-      <span class="shrink-0 text-[#B87AFF]">热门搜索：</span>
-      <button type="button" class="search-tag px-2 py-0.5 rounded bg-[#8B40FF]/20 hover:bg-[#8B40FF]/40 text-[#D4C8ED] whitespace-nowrap">九款套餐</button>
-      <button type="button" class="search-tag px-2 py-0.5 rounded bg-[#8B40FF]/20 hover:bg-[#8B40FF]/40 text-[#D4C8ED] whitespace-nowrap">Clash Party</button>
-      <button type="button" class="search-tag px-2 py-0.5 rounded bg-[#8B40FF]/20 hover:bg-[#8B40FF]/40 text-[#D4C8ED] whitespace-nowrap">BGP专线</button>
-      <button type="button" class="search-tag px-2 py-0.5 rounded bg-[#8B40FF]/20 hover:bg-[#8B40FF]/40 text-[#D4C8ED] whitespace-nowrap">ChatGPT</button>
-      <button type="button" class="search-tag px-2 py-0.5 rounded bg-[#8B40FF]/20 hover:bg-[#8B40FF]/40 text-[#D4C8ED] whitespace-nowrap">账户安全</button>
+    <div class="flex items-center gap-2 overflow-x-auto border-b border-line bg-night/50 px-4 py-2 text-xs text-ink-3">
+      <span class="shrink-0 text-lilac">常搜：</span>
+      {['连不上', '订阅更新失败', '速度慢', '流量', '订阅链接', 'ChatGPT', '客服'].map((tag) => (
+        <button type="button" class="search-tag">{tag}</button>
+      ))}
     </div>
 
-    <!-- Results List -->
-    <div id="search-results" class="max-h-96 overflow-y-auto p-4 space-y-2">
-      <!-- Injected by JS -->
-    </div>
+    <div id="search-results" class="max-h-[60vh] space-y-1 overflow-y-auto p-2 sm:max-h-96 sm:p-3" aria-live="polite"></div>
 
-    <!-- Footer helper -->
-    <div class="px-4 py-2.5 bg-[#09071C]/90 border-t border-[#8B40FF]/20 flex items-center justify-between text-[11px] text-[#D4C8ED]/60">
-      <span>支持中文标题、正文及关键词检索</span>
+    <div class="flex items-center justify-between gap-4 border-t border-line bg-night/60 px-4 py-2.5 text-[11px] text-ink-3">
+      <span>检索标题、摘要与关键词</span>
       <div class="flex items-center gap-2">
         <span>ESC 关闭</span>
         <span>·</span>
@@ -82,53 +119,50 @@ const searchIndex = ARTICLES_DATA.map((art) => ({
     const backdrop = document.getElementById('search-backdrop');
     const input = document.getElementById('search-input');
     const resultsContainer = document.getElementById('search-results');
-    const triggerBtn = document.getElementById('search-trigger-btn');
-    const mobileTrigger = document.getElementById('mobile-search-btn');
     const closeBtn = document.getElementById('search-close-btn');
     const tags = document.querySelectorAll('.search-tag');
+    let lastTrigger = null;
 
-    function openModal() {
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function openModal(trigger) {
       if (!dialog) return;
+      lastTrigger = trigger || document.activeElement;
       dialog.classList.remove('hidden');
-      setTimeout(() => input?.focus(), 50);
-      renderResults(searchIndex); // default all
+      renderResults(searchIndex);
+      setTimeout(() => input && input.focus(), 50);
     }
 
     function closeModal() {
       if (!dialog) return;
       dialog.classList.add('hidden');
       if (input) input.value = '';
+      if (lastTrigger && typeof lastTrigger.focus === 'function') lastTrigger.focus();
     }
 
     function renderResults(items) {
       if (!resultsContainer) return;
       if (items.length === 0) {
         resultsContainer.innerHTML = `
-          <div class="text-center py-8 text-sm text-[#D4C8ED]/60">
-            <p>未找到相关文章或教程</p>
-            <p class="text-xs text-[#D4C8ED]/40 mt-1">请尝试使用更简短的词汇或浏览下方热门标签</p>
+          <div class="px-4 py-10 text-center text-sm text-ink-2">
+            <p>没有找到相关内容</p>
+            <p class="mt-1 text-xs text-ink-3">换个更短的词试试，或者直接联系在线客服</p>
           </div>
         `;
         return;
       }
-
       resultsContainer.innerHTML = items
         .map(
           (item) => `
-          <a
-            href="${item.path}"
-            class="block p-3.5 rounded-xl bg-[#09071C]/70 hover:bg-[#8B40FF]/25 border border-[#8B40FF]/20 hover:border-[#C15BFF] transition-all group"
-          >
-            <div class="flex items-center justify-between text-xs text-[#D4C8ED]/70 mb-1">
-              <span class="px-2 py-0.5 rounded bg-[#8B40FF]/20 text-[#B87AFF] font-medium">${item.category}</span>
-              <span>${item.readTime}</span>
-            </div>
-            <h4 class="text-sm font-bold text-white group-hover:text-[#C15BFF] transition-colors mb-1.5">
-              ${item.title}
-            </h4>
-            <p class="text-xs text-[#D4C8ED]/75 line-clamp-2 leading-relaxed">
-              ${item.summary}
-            </p>
+          <a href="${escapeHtml(item.path)}" class="search-result sr-item">
+            <span class="sr-meta">
+              <span class="sr-cat">${escapeHtml(item.category)}</span>
+              <span>${escapeHtml(item.readTime)}</span>
+            </span>
+            <span class="sr-title block">${escapeHtml(item.title)}</span>
+            <span class="sr-sum block">${escapeHtml(item.summary)}</span>
           </a>
         `
         )
@@ -136,51 +170,77 @@ const searchIndex = ARTICLES_DATA.map((art) => ({
     }
 
     function doSearch(query) {
-      const q = query.trim().toLowerCase();
-      if (!q) {
+      const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      if (words.length === 0) {
         renderResults(searchIndex);
         return;
       }
       const filtered = searchIndex.filter((item) => {
-        return (
-          item.title.toLowerCase().includes(q) ||
-          item.summary.toLowerCase().includes(q) ||
-          item.keywords.toLowerCase().includes(q) ||
-          item.category.toLowerCase().includes(q)
-        );
+        const hay = (item.title + ' ' + item.summary + ' ' + item.keywords + ' ' + item.category).toLowerCase();
+        return words.every((w) => hay.includes(w));
       });
       renderResults(filtered);
     }
 
-    triggerBtn?.addEventListener('click', openModal);
-    mobileTrigger?.addEventListener('click', openModal);
+    // 快捷键提示：非苹果设备显示 Ctrl K
+    if (!/Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent)) {
+      document.querySelectorAll('[data-kbd]').forEach((k) => {
+        k.textContent = 'Ctrl K';
+      });
+    }
+
+    document.querySelectorAll('[data-open-search]').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal(el);
+      });
+    });
     closeBtn?.addEventListener('click', closeModal);
     backdrop?.addEventListener('click', closeModal);
 
-    input?.addEventListener('input', (e) => {
-      doSearch(e.target.value);
+    // 点击结果（包括同页锚点）后关闭弹窗
+    resultsContainer?.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (link) {
+        dialog?.classList.add('hidden');
+        if (input) input.value = '';
+      }
     });
+
+    input?.addEventListener('input', (e) => doSearch(e.target.value));
 
     tags.forEach((t) => {
       t.addEventListener('click', () => {
         const tagText = t.textContent || '';
         if (input) input.value = tagText;
         doSearch(tagText);
+        input?.focus();
       });
     });
 
-    // Keyboard shortcuts
     window.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      const isOpen = dialog && !dialog.classList.contains('hidden');
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        if (dialog?.classList.contains('hidden')) {
-          openModal();
-        } else {
-          closeModal();
-        }
+        if (isOpen) closeModal();
+        else openModal(null);
+        return;
       }
-      if (e.key === 'Escape' && !dialog?.classList.contains('hidden')) {
+      if (!isOpen) return;
+      if (e.key === 'Escape') {
         closeModal();
+        return;
+      }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        const links = Array.from(resultsContainer ? resultsContainer.querySelectorAll('a.search-result') : []);
+        if (links.length === 0) return;
+        e.preventDefault();
+        const idx = links.indexOf(document.activeElement);
+        let next;
+        if (e.key === 'ArrowDown') next = idx < 0 ? 0 : Math.min(idx + 1, links.length - 1);
+        else next = idx <= 0 ? -1 : idx - 1;
+        if (next < 0) input?.focus();
+        else links[next].focus();
       }
     });
   }

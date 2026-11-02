@@ -1,0 +1,126 @@
+---
+// HeroEmblem.astro: 安全盾牌徽记 + 加密数据流纹样（纯装饰，aria-hidden；每页只用一次）
+// 左侧是长短不一的“明文”数据段，穿过盾牌后变成整齐的“密文”节奏。
+// 只有盾牌上的扫描线与背后的光晕在动；减少动态效果时两者静止。
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+
+const SHIELD =
+  'M100 24C112 31 132 38 160 41Q168 42 168 50L168 106C168 152 138 184 100 202C62 184 32 152 32 106L32 50Q32 42 40 41C68 38 88 31 100 24Z';
+
+// 明文（左）：不规则的数据段；密文（右）：整齐的节奏与小方块
+const lanes = [
+  { y: 40, w: 1, plain: '1 9 18 7 3 12 30 9 2 14', po: 0.14, cipher: '4 6', co: 0.3 },
+  { y: 62, w: 1.5, plain: '26 9 3 7 12 16 2 8 20 11', po: 0.2, cipher: '10 6', co: 0.42 },
+  { y: 84, w: 1.5, plain: '6 7 2 12 34 8 9 9 3 18', po: 0.26, cipher: '4 12', co: 0.42, block: true },
+  { y: 106, w: 2, plain: '40 10 5 8 18 12 2 7 12 9', po: 0.34, cipher: '12 6', co: 0.6 },
+  { y: 134, w: 2, plain: '12 8 3 10 28 9 2 6 44 12', po: 0.34, cipher: '12 6', co: 0.6, offset: 9 },
+  { y: 156, w: 1.5, plain: '3 9 22 7 8 13 2 10 30 8', po: 0.26, cipher: '4 12', co: 0.42, block: true, offset: 8 },
+  { y: 178, w: 1.5, plain: '18 10 2 6 10 14 36 9 4 11', po: 0.2, cipher: '10 6', co: 0.42, offset: 5 },
+  { y: 200, w: 1, plain: '8 12 2 9 24 10 3 14 16 9', po: 0.14, cipher: '4 6', co: 0.3 },
+];
+---
+
+<div class:list={['hero-visual', className]} aria-hidden="true">
+  <svg class="hero-lanes" viewBox="0 0 1440 240" preserveAspectRatio="xMidYMid slice" fill="none">
+    <defs>
+      <linearGradient id="em-lane-fade" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#fff" stop-opacity="0" />
+        <stop offset=".2" stop-color="#fff" stop-opacity="1" />
+        <stop offset=".8" stop-color="#fff" stop-opacity="1" />
+        <stop offset="1" stop-color="#fff" stop-opacity="0" />
+      </linearGradient>
+      <mask id="em-lane-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="240">
+        <rect width="1440" height="240" fill="url(#em-lane-fade)" />
+      </mask>
+    </defs>
+    <g mask="url(#em-lane-mask)">
+      <g stroke="#C4B5FD">
+        {lanes.map((l) => (
+          <path d={`M0 ${l.y}H606`} stroke-width={l.w} stroke-opacity={l.po} stroke-dasharray={l.plain} />
+        ))}
+      </g>
+      <g stroke="#8B5CF6">
+        {lanes.map((l) => (
+          <path
+            d={`M834 ${l.y}H1440`}
+            stroke-width={l.block ? 4 : l.w}
+            stroke-opacity={l.co}
+            stroke-dasharray={l.cipher}
+            stroke-dashoffset={l.offset ?? 0}
+          />
+        ))}
+      </g>
+      <g fill="#C4B5FD" fill-opacity=".55">
+        <circle cx="612" cy="106" r="2.5" />
+        <circle cx="612" cy="134" r="2.5" />
+      </g>
+      <g fill="#8B5CF6">
+        <circle cx="828" cy="106" r="2.5" />
+        <circle cx="828" cy="134" r="2.5" />
+      </g>
+    </g>
+  </svg>
+
+  <svg class="hero-emblem" viewBox="-20 -7 240 240" fill="none">
+    <defs>
+      <radialGradient id="em-glow-g" cx="100" cy="113" r="112" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#6203FB" stop-opacity=".6" />
+        <stop offset=".55" stop-color="#6203FB" stop-opacity=".14" />
+        <stop offset="1" stop-color="#6203FB" stop-opacity="0" />
+      </radialGradient>
+      <linearGradient id="em-shield-g" x1="100" y1="24" x2="100" y2="202" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#2F2080" />
+        <stop offset="1" stop-color="#120B33" />
+      </linearGradient>
+      <linearGradient id="em-rim-g" x1="100" y1="24" x2="100" y2="202" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#EDE9FE" stop-opacity=".95" />
+        <stop offset=".5" stop-color="#A78BFA" stop-opacity=".55" />
+        <stop offset="1" stop-color="#8B5CF6" stop-opacity=".18" />
+      </linearGradient>
+      <linearGradient id="em-body-g" x1="100" y1="103" x2="100" y2="144" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#8B5CF6" />
+        <stop offset="1" stop-color="#6203FB" />
+      </linearGradient>
+      <linearGradient id="em-shackle-g" x1="100" y1="82" x2="100" y2="106" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#EDE9FE" />
+        <stop offset="1" stop-color="#A78BFA" />
+      </linearGradient>
+      <linearGradient id="em-beam-g" x1="0" y1="0" x2="0" y2="26" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#C4B5FD" stop-opacity="0" />
+        <stop offset="1" stop-color="#C4B5FD" stop-opacity=".3" />
+      </linearGradient>
+      <linearGradient id="em-line-g" x1="32" y1="0" x2="168" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#EDE9FE" stop-opacity="0" />
+        <stop offset=".5" stop-color="#EDE9FE" stop-opacity=".95" />
+        <stop offset="1" stop-color="#EDE9FE" stop-opacity="0" />
+      </linearGradient>
+      <clipPath id="em-clip"><path d={SHIELD} /></clipPath>
+      <filter id="em-soft" x="-1" y="-1" width="3" height="3"><feGaussianBlur stdDeviation="3.5" /></filter>
+    </defs>
+
+    <circle class="em-glow" cx="100" cy="113" r="112" fill="url(#em-glow-g)" />
+    <circle cx="100" cy="113" r="106" stroke="#C4B5FD" stroke-opacity=".22" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.01 8.31" />
+    <circle cx="100" cy="113" r="95" stroke="#C4B5FD" stroke-opacity=".1" />
+    <path d="M100 7v6M100 213v6M-6 113h6M200 113h6" stroke="#C4B5FD" stroke-opacity=".35" stroke-width="1.5" stroke-linecap="round" />
+
+    <path d={SHIELD} fill="url(#em-shield-g)" />
+    <path d={SHIELD} stroke="url(#em-rim-g)" stroke-width="1.5" />
+    <path d={SHIELD} transform="translate(100 113) scale(.84) translate(-100 -113)" stroke="#C4B5FD" stroke-opacity=".16" />
+
+    <g clip-path="url(#em-clip)">
+      <g class="em-scan">
+        <rect x="32" y="0" width="136" height="26" fill="url(#em-beam-g)" />
+        <rect x="32" y="25" width="136" height="1.5" fill="url(#em-line-g)" />
+      </g>
+    </g>
+
+    <path d="M87 104V95a13 13 0 0 1 26 0v9" stroke="url(#em-shackle-g)" stroke-width="6" stroke-linecap="round" />
+    <rect x="75" y="103" width="50" height="41" rx="11" fill="url(#em-body-g)" />
+    <path d="M88 105h24" stroke="#fff" stroke-opacity=".35" stroke-linecap="round" />
+    <circle cx="100" cy="121" r="7" fill="#CEB5F9" fill-opacity=".45" filter="url(#em-soft)" />
+    <path d="M100 115.5a5 5 0 0 0-2.3 9.45L96.4 132h7.2l-1.3-7.05A5 5 0 0 0 100 115.5Z" fill="#CEB5F9" />
+  </svg>
+</div>

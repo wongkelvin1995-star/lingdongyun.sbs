@@ -1,0 +1,51 @@
+---
+// FamilyBlock.astro: 灵动云官方站点（五个站点各自负责一件事；当前站点不做链接）
+// 样式：一条发丝线分隔的“目录条”，当前站点用品牌紫顶线 +「当前站点」标记。
+import Icon from './Icon.astro';
+import { FAMILY_SITES, CURRENT_SITE_KEY, SITE_CONFIG } from '../config/site';
+---
+
+<section data-ldy-family id="official-sites" class="section">
+  <div class="wrap">
+    <div class="section-head !mb-8">
+      <h2 class="section-title">灵动云官方站点</h2>
+      <p class="section-lead">灵动云的内容分布在以下五个官方站点，各自负责一件事。</p>
+    </div>
+
+    <ul class="family" role="list">
+      {FAMILY_SITES.map((site) => {
+        const isCurrent = site.key === CURRENT_SITE_KEY;
+        return (
+          <li>
+            {isCurrent ? (
+              <div class="family-item" aria-current="page">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <span class="text-base font-semibold text-ink">{site.name}</span>
+                  <span class="chip !min-h-6 !px-2 !text-xs">当前站点</span>
+                </div>
+                <span class="family-domain">{site.domain}</span>
+                <span class="text-sm leading-relaxed text-ink-2">{site.description}</span>
+              </div>
+            ) : (
+              <a href={site.url} class="family-item group">
+                <span class="flex items-center justify-between gap-2 text-base font-semibold text-ink">
+                  <span class="transition-colors group-hover:text-lilac-soft">{site.name}</span>
+                  <Icon name="arrow-right" class="h-4 w-4 shrink-0 text-ink-3 transition-transform group-hover:translate-x-0.5 group-hover:text-lilac" />
+                </span>
+                <span class="family-domain">{site.domain}</span>
+                <span class="text-sm leading-relaxed text-ink-2">{site.description}</span>
+              </a>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+
+    <p class="mt-5">
+      <a href={SITE_CONFIG.officialPageUrl} class="more min-h-11">
+        <span>查看官方站点说明</span>
+        <Icon name="arrow-right" />
+      </a>
+    </p>
+  </div>
+</section>

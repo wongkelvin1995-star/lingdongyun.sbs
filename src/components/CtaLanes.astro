@@ -1,0 +1,33 @@
+---
+// CtaLanes.astro: 收尾面板背后的加密数据流纹样（呼应首页徽记；静态、纯装饰；每页只用一次）
+// side="both"：两侧都有（居中文字的面板）；side="right"：只在右侧（左对齐文字的面板）
+interface Props {
+  side?: 'both' | 'right';
+}
+const { side = 'both' } = Astro.props;
+const leftOpacity = side === 'both' ? '.9' : '0';
+const ys = [44, 68, 92, 116, 140, 164];
+const plain = ['2 9 20 7 4 12 28 9', '24 8 3 7 12 14 2 9', '6 7 2 12 30 8 9 9', '14 9 4 10 24 9 2 7', '3 9 22 7 8 13 2 10', '18 10 2 6 10 14 32 9'];
+---
+
+<svg class="cta-lanes" viewBox="0 0 1200 200" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="cta-lane-fade" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff" stop-opacity={leftOpacity} />
+      <stop offset=".32" stop-color="#fff" stop-opacity="0" />
+      <stop offset={side === 'both' ? '.68' : '.6'} stop-color="#fff" stop-opacity="0" />
+      <stop offset="1" stop-color="#fff" stop-opacity=".9" />
+    </linearGradient>
+    <mask id="cta-lane-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="200">
+      <rect width="1200" height="200" fill="url(#cta-lane-fade)" />
+    </mask>
+  </defs>
+  <g mask="url(#cta-lane-mask)">
+    <g stroke="#C4B5FD" stroke-opacity=".28" stroke-width="1.5">
+      {ys.map((y, i) => <path d={`M0 ${y}H600`} stroke-dasharray={plain[i]} />)}
+    </g>
+    <g stroke="#8B5CF6" stroke-opacity=".5">
+      {ys.map((y, i) => <path d={`M600 ${y}H1200`} stroke-width={i % 3 === 1 ? 4 : 1.5} stroke-dasharray={i % 3 === 1 ? '4 12' : '10 6'} stroke-dashoffset={i * 3} />)}
+    </g>
+  </g>
+</svg>

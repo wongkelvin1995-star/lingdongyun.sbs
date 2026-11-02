@@ -1,45 +1,31 @@
 ---
-// Breadcrumbs.astro: 面包屑导航与 BreadcrumbList Schema
-interface Crumb {
-  name: string;
-  path: string;
-}
+// Breadcrumbs.astro: 面包屑导航（BreadcrumbList 结构化数据由页面通过 breadcrumbJsonLd() 传给 BaseLayout）
+import type { Crumb } from '../utils/schema';
 
 interface Props {
   items: Crumb[];
 }
 
 const { items } = Astro.props;
-
-const breadcrumbSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: items.map((crumb, index) => ({
-    '@type': 'ListItem',
-    position: index + 1,
-    name: crumb.name,
-    item: `https://lingdongyun.sbs${crumb.path}`,
-  })),
-};
 ---
 
-<nav aria-label="面包屑导航" class="py-4">
-  <ol class="flex items-center flex-wrap gap-2 text-xs sm:text-sm text-[#D4C8ED]/75">
+<nav aria-label="面包屑导航">
+  <ol class="flex min-w-0 flex-wrap items-center gap-x-1.5 text-[0.8125rem] text-ink-3 sm:text-sm">
     {items.map((item, index) => {
       const isLast = index === items.length - 1;
       return (
-        <li class="flex items-center gap-2">
+        <li class="flex min-w-0 items-center gap-1.5">
           {index > 0 && (
-            <svg class="w-3.5 h-3.5 text-[#8B40FF]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            <svg class="h-3.5 w-3.5 shrink-0 text-lilac/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m9.5 6 6 6-6 6" />
             </svg>
           )}
           {isLast ? (
-            <span class="text-white font-medium truncate max-w-[200px] sm:max-w-xs md:max-w-md" aria-current="page">
+            <span class="max-w-[220px] truncate text-ink-2 sm:max-w-md" aria-current="page">
               {item.name}
             </span>
           ) : (
-            <a href={item.path} class="hover:text-white hover:underline transition-colors">
+            <a href={item.path} class="inline-flex min-h-11 items-center rounded-chip transition-colors hover:text-ink">
               {item.name}
             </a>
           )}
@@ -48,5 +34,3 @@ const breadcrumbSchema = {
     })}
   </ol>
 </nav>
-
-<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
