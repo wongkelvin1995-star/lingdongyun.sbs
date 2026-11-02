@@ -1,0 +1,36 @@
+---
+// 404.astro: 真实 404 页面（Cloudflare Pages 检测到 404.html 后以 404 状态返回）
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroEmblem from '../components/HeroEmblem.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout
+  title="页面不存在｜灵动云帮助中心"
+  description="你访问的页面不存在或已移动。可以返回灵动云帮助中心首页，搜索排查步骤与网络知识，或直接联系在线客服。"
+  noindex
+>
+  <section class="hero !pb-20 sm:!pb-28">
+    <div class="wrap">
+      <HeroEmblem />
+      <div class="mx-auto max-w-xl">
+        <h1 class="text-3xl font-semibold tracking-wide text-ink sm:text-4xl">页面不存在</h1>
+        <p class="mt-4 text-[0.9375rem] leading-[1.85] text-ink-2">你访问的地址不存在或已移动。可以回到帮助中心首页，或者搜索你遇到的问题。</p>
+        <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="/" class="btn btn-primary w-full sm:w-auto">
+            <Icon name="home" />
+            返回帮助中心首页
+          </a>
+          <button type="button" data-open-search class="btn btn-secondary w-full sm:w-auto">
+            <Icon name="search" />
+            搜索帮助中心
+          </button>
+          <a href="/guides/troubleshooting/" class="btn btn-secondary w-full sm:w-auto">
+            <Icon name="wrench" />
+            连接问题排查
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

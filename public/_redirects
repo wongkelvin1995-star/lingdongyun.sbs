@@ -1,0 +1,7 @@
+# 已迁出的页面：301 到新的官方站点页面（同时覆盖带 / 和不带 / 的写法）
+/guides/lingdongyun-plans/ https://lingdongyun.site/guides/plan-selection/ 301
+/guides/lingdongyun-plans https://lingdongyun.site/guides/plan-selection/ 301
+/guides/airport-selection/ https://lingdongyun.best/guides/airport-buying-guide 301
+/guides/airport-selection https://lingdongyun.best/guides/airport-buying-guide 301
+/guides/clash-party/ https://lingdongyun.website/guides/clash-party/ 301
+/guides/clash-party https://lingdongyun.website/guides/clash-party/ 301

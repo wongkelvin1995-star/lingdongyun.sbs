@@ -1,9 +1,15 @@
 ---
-// ArticleLayout.astro: 灵动云官方深度指南文章专用布局
+// ArticleLayout.astro: 帮助中心文章布局（排查步骤与网络知识）
+// 文档式布局：正文栏约 46rem；桌面端本文目录固定在右侧并高亮当前小节，手机端目录在正文上方。
 import BaseLayout from './BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Icon from '../components/Icon.astro';
+import CtaLanes from '../components/CtaLanes.astro';
 import { type ArticleItem, ARTICLES_DATA } from '../data/articles';
 import { SITE_CONFIG } from '../config/site';
+import { breadcrumbJsonLd } from '../utils/schema';
+import { extractTableOfContents, normalizeArticleContent } from '../utils/markdown';
+import { categoryIcon } from '../utils/topic';
 
 interface Props {
   article: ArticleItem;
@@ -11,155 +17,185 @@ interface Props {
 
 const { article } = Astro.props;
 
-// Related articles
-const relatedArticles = ARTICLES_DATA.filter((a) =>
-  article.relatedSlugs.includes(a.slug)
-);
+const pageUrl = `${SITE_CONFIG.siteUrl}${article.path}`;
+// <title>：标题已含品牌时直接使用，否则加「｜灵动云」
+const metaTitle = article.title.includes('灵动云') ? article.title : `${article.title}｜灵动云`;
 
-// Article JSON-LD Schema
-const articleSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: article.title,
-  description: article.summary,
-  author: {
-    '@type': 'Organization',
-    name: '灵动云官方编辑部',
-    url: 'https://lingdongyun.sbs/',
-  },
-  publisher: {
-    '@type': 'Organization',
-    name: '灵动云 LingDongYun',
-    logo: {
-      '@type': 'ImageObject',
-      url: 'https://lingdongyun.sbs/favicon.svg',
-    },
-  },
-  datePublished: article.publishDate,
-  dateModified: article.modifyDate,
-  mainEntityOfPage: {
-    '@type': 'WebPage',
-    '@id': `https://lingdongyun.sbs${article.path}`,
-  },
-  keywords: article.keywords.join(', '),
-};
+const relatedArticles = article.relatedSlugs
+  .map((slug) => ARTICLES_DATA.find((a) => a.slug === slug))
+  .filter((a): a is ArticleItem => Boolean(a));
+
+const tocItems = extractTableOfContents(normalizeArticleContent(article.content));
 
 const breadcrumbs = [
-  { name: '首页', path: '/' },
-  { name: '使用教程与指南', path: '/#guides' },
+  { name: '帮助中心', path: '/' },
   { name: article.title, path: article.path },
 ];
+
+const articleSchema = {
+  '@type': article.schemaType,
+  '@id': `${pageUrl}#article`,
+  headline: article.title,
+  description: article.description,
+  inLanguage: 'zh-CN',
+  datePublished: article.publishDate,
+  dateModified: article.modifyDate,
+  author: { '@id': SITE_CONFIG.orgId },
+  publisher: { '@id': SITE_CONFIG.orgId },
+  mainEntityOfPage: pageUrl,
+  isPartOf: { '@id': SITE_CONFIG.websiteId },
+  image: SITE_CONFIG.ogImage,
+};
 ---
 
 <BaseLayout
-  title={`${article.title}｜灵动云官方指南`}
-  description={article.summary}
-  keywords={article.keywords}
+  title={metaTitle}
+  description={article.description}
   canonicalPath={article.path}
   ogType="article"
-  articleMeta={{
-    publishDate: article.publishDate,
-    modifyDate: article.modifyDate,
-    author: article.author,
-  }}
+  modifiedTime={article.modifyDate}
+  jsonLd={[articleSchema, breadcrumbJsonLd(breadcrumbs)]}
 >
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-    <!-- Breadcrumbs -->
+  <div class="wrap pt-4 pb-20 sm:pt-6 sm:pb-24">
     <Breadcrumbs items={breadcrumbs} />
 
-    <!-- Article Header -->
-    <header class="my-8 pb-8 border-b border-[#8B40FF]/25">
-      <div class="flex items-center gap-3 text-xs text-[#D4C8ED]/80 mb-4 flex-wrap">
-        <span class="px-3 py-1 rounded-full bg-[#8B40FF]/25 text-[#C15BFF] font-semibold border border-[#8B40FF]/40">
-          {article.category}
-        </span>
-        <span>发布日期：{article.publishDate}</span>
-        <span>·</span>
-        <span>最后更新：{article.modifyDate}</span>
-        <span>·</span>
-        <span>预计阅读：{article.readTime}</span>
-      </div>
-
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6">
-        {article.title}
-      </h1>
-
-      <p class="text-base sm:text-lg text-[#D4C8ED]/90 leading-relaxed p-4 sm:p-5 rounded-2xl bg-[#160C32]/70 border-l-4 border-[#C15BFF]">
-        {article.summary}
-      </p>
-    </header>
-
-    <!-- Substantive Article Content -->
-    <article class="prose prose-invert prose-purple max-w-none text-[#D4C8ED] leading-relaxed space-y-6">
-      <slot />
-    </article>
-
-    <!-- Post-Article Register CTA Banner -->
-    <div class="my-14 p-8 rounded-3xl bg-gradient-to-br from-[#160C32] via-[#23114a] to-[#09071C] border border-[#8B40FF]/40 shadow-[0_10px_35px_rgba(139,64,255,0.25)] text-center relative overflow-hidden">
-      <div class="absolute -top-16 -right-16 w-48 h-48 bg-[#588DFF]/20 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="relative z-10">
-        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-[#8B40FF]/30 text-[#C15BFF] border border-[#8B40FF]/40 inline-block mb-3">
-          灵动云官方通道
-        </span>
-        <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">
-          即刻体验灵动云 BGP 专线网络加速
-        </h3>
-        <p class="text-xs sm:text-sm text-[#D4C8ED]/80 max-w-md mx-auto mb-6">
-          九款套餐自由选择，入门月付 ¥20 起，全年超值 ¥99。全平台一键配置，让网络连接更自由。
-        </p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href={SITE_CONFIG.registerUrl}
-            target="_blank"
-            rel="sponsored noopener noreferrer"
-            class="w-full sm:w-auto px-7 py-3 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-[#8B40FF] via-[#C15BFF] to-[#588DFF] hover:shadow-[0_0_25px_rgba(193,91,255,0.5)] transition-all"
-          >
-            立即注册灵动云
-          </a>
-          <a
-            href="/#pricing"
-            class="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold text-sm text-[#D4C8ED] hover:text-white bg-[#09071C]/80 hover:bg-[#8B40FF]/25 border border-[#8B40FF]/30 transition-all"
-          >
-            查看全部九款套餐
-          </a>
+    <div class="article-grid mt-4 sm:mt-6">
+      <header>
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.8125rem] text-ink-3">
+          <span class="chip">
+            <Icon name={categoryIcon(article.category)} />
+            {article.category}
+          </span>
+          <span class="tabular-nums">更新于 {article.modifyDate}</span>
+          <span aria-hidden="true">·</span>
+          <span>阅读约 {article.readTime}</span>
         </div>
-      </div>
-    </div>
 
-    <!-- Related Articles -->
-    {relatedArticles.length > 0 && (
-      <section class="mt-16 pt-10 border-t border-[#8B40FF]/25">
-        <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-[#588DFF]"></span>
-          <span>相关推荐指南</span>
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {relatedArticles.map((rel) => (
-            <a
-              href={rel.path}
-              class="group p-5 rounded-xl bg-[#160C32]/60 hover:bg-[#160C32]/90 border border-[#8B40FF]/25 hover:border-[#C15BFF]/60 transition-all flex flex-col justify-between"
-            >
-              <div>
-                <span class="text-xs text-[#B87AFF] font-medium">{rel.category}</span>
-                <h4 class="text-base font-bold text-white group-hover:text-[#C15BFF] transition-colors mt-1 mb-2 line-clamp-2">
-                  {rel.title}
-                </h4>
-                <p class="text-xs text-[#D4C8ED]/75 line-clamp-2 leading-relaxed">
-                  {rel.summary}
-                </p>
-              </div>
-              <div class="mt-4 text-xs font-semibold text-[#588DFF] group-hover:text-white flex items-center gap-1">
-                <span>阅读此篇</span>
-                <svg class="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </div>
-            </a>
-          ))}
+        <h1 class="article-title mt-5">{article.title}</h1>
+
+        <p class="article-standfirst">{article.description}</p>
+      </header>
+
+      {tocItems.length > 2 && (
+        <nav aria-label="文章目录大纲" class="toc glass">
+          <div class="toc-title">
+            <Icon name="list" />
+            <span>本文目录</span>
+          </div>
+          <ol class="toc-list">
+            {tocItems.map((item, idx) => (
+              <li>
+                <a href={`#${item.id}`} class="toc-link">
+                  <span class="toc-num">{idx + 1}</span>
+                  <span>{item.title}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+
+      <article class="mt-10">
+        <slot />
+      </article>
+
+      <!-- 还没解决：联系支持 -->
+      <section class="cta-panel glass mt-16 !text-left">
+        <CtaLanes side="right" />
+        <div class="flex flex-col gap-5 sm:flex-row sm:gap-6">
+          <span class="icon-tile"><Icon name="chat" /></span>
+          <div class="min-w-0">
+            <h2 class="text-xl font-semibold text-ink sm:text-2xl">还没有解决？</h2>
+            <p class="mt-2 max-w-xl text-[0.9375rem] leading-[1.85] text-ink-2">
+              可以打开在线客服（Crisp 对话）直接描述情况，或登录用户中心提交工单。提问时附上设备、客户端版本和报错信息，截图请遮住订阅链接。
+            </p>
+            <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <button type="button" data-open-crisp class="btn btn-primary">
+                <Icon name="chat" />
+                联系在线客服
+              </button>
+              <a href={SITE_CONFIG.registerUrl} target="_blank" rel="noopener" class="btn btn-secondary">
+                登录用户中心提交工单
+              </a>
+              {article.slug !== 'troubleshooting' && (
+                <a href="/guides/troubleshooting/" class="btn btn-secondary">
+                  连接问题排查步骤
+                </a>
+              )}
+            </div>
+          </div>
         </div>
       </section>
-    )}
+
+      {relatedArticles.length > 0 && (
+        <section class="mt-16">
+          <h2 class="mb-5 text-xl font-semibold text-ink">相关文章</h2>
+          <ul class="kb-list glass" role="list">
+            {relatedArticles.map((rel) => (
+              <li>
+                <a href={rel.path} class="kb-row group">
+                  <span class="icon-tile icon-tile-sm mt-0.5"><Icon name={categoryIcon(rel.category)} /></span>
+                  <div class="min-w-0 flex-1">
+                    <span class="block text-[0.8125rem] font-medium text-lilac">{rel.category}</span>
+                    <h3 class="mt-1 text-base font-semibold leading-[1.55] text-ink">{rel.title}</h3>
+                    <p class="mt-1.5 text-sm leading-[1.8] text-ink-2">{rel.description}</p>
+                    <span class="more mt-3">
+                      <span>阅读此篇</span>
+                      <Icon name="arrow-right" />
+                    </span>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
   </div>
 </BaseLayout>
 
-<script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+<script>
+  // 本文目录：滚动时高亮当前小节（只改样式状态，不影响链接本身）
+  function setupTocSpy() {
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.toc-link'));
+    if (links.length === 0) return;
+    const pairs = links
+      .map((link) => {
+        const id = decodeURIComponent(link.hash.slice(1));
+        const el = document.getElementById(id);
+        return el ? { link, el } : null;
+      })
+      .filter((p): p is { link: HTMLAnchorElement; el: HTMLElement } => p !== null);
+
+    let ticking = false;
+    function update() {
+      ticking = false;
+      let current: HTMLAnchorElement | null = null;
+      for (const p of pairs) {
+        if (p.el.getBoundingClientRect().top <= 140) current = p.link;
+        else break;
+      }
+      links.forEach((l) => {
+        if (l === current) l.setAttribute('aria-current', 'true');
+        else l.removeAttribute('aria-current');
+      });
+    }
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true }
+    );
+    update();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupTocSpy);
+  } else {
+    setupTocSpy();
+  }
+</script>

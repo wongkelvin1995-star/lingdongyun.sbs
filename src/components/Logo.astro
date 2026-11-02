@@ -1,0 +1,23 @@
+---
+// Logo.astro: 全站唯一的 Logo 出口。标志文件只有一个：public/brand/logo.svg（灵动云官方标志）。
+// 字标：标志 +「灵动云」+ 角色标签「帮助中心」。页头、页脚、404 都通过这个组件显示 Logo。
+import { SITE_CONFIG } from '../config/site';
+
+interface Props {
+  href?: string;
+  ariaLabel?: string;
+  size?: number;
+  class?: string;
+}
+
+const { href = '/', ariaLabel = '灵动云帮助中心首页', size = 34, class: className = '' } = Astro.props;
+---
+
+<a href={href} class:list={['lockup', className]} aria-label={ariaLabel}>
+  <img class="lockup-mark" src="/brand/logo.svg" width={size} height={size} alt="" decoding="async" />
+  <span class="lockup-text">
+    <span class="lockup-brand">{SITE_CONFIG.brandName}</span>
+    <span class="lockup-sep" aria-hidden="true">·</span>
+    <span class="lockup-role">{SITE_CONFIG.roleLabel}</span>
+  </span>
+</a>

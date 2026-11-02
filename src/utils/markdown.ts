@@ -1,5 +1,5 @@
 /**
- * markdown.ts: 灵动云全站统一 Markdown 与富文本解析引擎
+ * markdown.ts: 帮助中心统一 Markdown 渲染
  * 核心特性：
  * 1. 严格适配 marked v15 Token 规范，杜绝 [object Object] 渲染漏洞
  * 2. 支持递归解析嵌套结构化富文本 AST / Block 数组（children, content, value, text）
@@ -8,17 +8,31 @@
  */
 import { marked, type Tokens } from 'marked';
 
-// Custom renderer object for marked v15
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// 提示框图标（与 Icon.astro 同一套线条图标）
+const TIP_ICON =
+  '<svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.75"/><path d="M12 11v5"/><path d="M12 8h.01" stroke-width="2.4"/></svg>';
+const SECURE_ICON =
+  '<svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3.2 5 5.9v5.3c0 4.4 2.9 8.2 7 9.6 4.1-1.4 7-5.2 7-9.6V5.9Z"/><path d="m9 12.2 2.2 2.2 4-4.3"/></svg>';
+
+/** 引用块里谈的是订阅链接 / 账户凭证的保护时，用「安全提示」样式 */
+function isSecurityTip(html: string): boolean {
+  return /订阅链接|账户凭证|泄露|重置订阅/.test(html.replace(/<[^>]*>/g, ''));
+}
+
+// Custom renderer object for marked（输出语义化 HTML，样式由 global.css 的 .prose-help 统一控制）
 const renderer = {
   table(this: any, token: Tokens.Table): string {
     let headerCells = '';
     for (let r = 0; r < token.header.length; r++) {
       const cell = token.header[r];
       const cellContent = this.parser.parseInline(cell.tokens);
-      const alignClass = cell.align ? `text-${cell.align}` : 'text-left';
-      headerCells += `<th class="px-4 py-3.5 ${alignClass} font-semibold">${cellContent}</th>\n`;
+      const align = cell.align ? ` style="text-align:${cell.align}"` : '';
+      headerCells += `<th scope="col"${align}>${cellContent}</th>\n`;
     }
-    const thead = `<tr class="border-b border-[#8B40FF]/30">\n${headerCells}</tr>\n`;
 
     let tbodyRows = '';
     for (let r = 0; r < token.rows.length; r++) {
@@ -27,24 +41,13 @@ const renderer = {
       for (let s = 0; s < row.length; s++) {
         const cell = row[s];
         const cellContent = this.parser.parseInline(cell.tokens);
-        const alignClass = cell.align ? `text-${cell.align}` : 'text-left';
-        rowCells += `<td class="px-4 py-3 ${alignClass}">${cellContent}</td>\n`;
+        const align = cell.align ? ` style="text-align:${cell.align}"` : '';
+        rowCells += `<td${align}>${cellContent}</td>\n`;
       }
-      tbodyRows += `<tr class="hover:bg-[#8B40FF]/10 transition-colors border-b border-[#8B40FF]/15 last:border-b-0">\n${rowCells}</tr>\n`;
+      tbodyRows += `<tr>\n${rowCells}</tr>\n`;
     }
 
-    return `
-      <div class="my-6 overflow-x-auto rounded-xl border border-[#8B40FF]/30 bg-[#160C32]/70 shadow-md">
-        <table class="w-full text-left text-xs sm:text-sm text-[#D4C8ED] border-collapse min-w-[500px]">
-          <thead class="bg-[#09071C]/90 text-white font-semibold">
-            ${thead}
-          </thead>
-          <tbody class="divide-y divide-[#8B40FF]/15">
-            ${tbodyRows}
-          </tbody>
-        </table>
-      </div>
-    `;
+    return `<div class="table-wrap"><table${token.header.length >= 4 ? ' class="is-wide"' : ''}><thead><tr>\n${headerCells}</tr></thead><tbody>\n${tbodyRows}</tbody></table></div>\n`;
   },
 
   list(this: any, token: Tokens.List): string {
@@ -53,89 +56,73 @@ const renderer = {
       itemsHtml += this.listitem(token.items[i]);
     }
     const tag = token.ordered ? 'ol' : 'ul';
-    const listTypeClass = token.ordered ? 'list-decimal pl-5 space-y-2' : 'list-disc pl-5 space-y-2';
-    return `<${tag} class="${listTypeClass} my-4 text-sm sm:text-base leading-relaxed text-[#D4C8ED]">${itemsHtml}</${tag}>\n`;
+    return `<${tag}>${itemsHtml}</${tag}>\n`;
   },
 
   listitem(this: any, item: Tokens.ListItem): string {
     const content = this.parser.parse(item.tokens);
-    return `<li class="my-1.5">${content}</li>\n`;
+    return `<li>${content}</li>\n`;
   },
 
   blockquote(this: any, token: Tokens.Blockquote): string {
     const content = this.parser.parse(token.tokens);
-    return `
-      <blockquote class="my-6 p-4 sm:p-5 rounded-xl bg-[#160C32]/80 border-l-4 border-[#588DFF] text-sm text-[#D4C8ED]/90 italic shadow-sm">
-        ${content}
-      </blockquote>
-    `;
+    if (isSecurityTip(content)) {
+      return `<blockquote class="callout callout-secure">${SECURE_ICON}<div class="callout-body"><span class="callout-label">安全提示</span>${content}</div></blockquote>\n`;
+    }
+    return `<blockquote class="callout">${TIP_ICON}<div class="callout-body">${content}</div></blockquote>\n`;
   },
 
   heading(this: any, token: Tokens.Heading): string {
-    const text = this.parser.parseInline(token.tokens);
-    const cleanId = text.replace(/<[^>]*>/g, '').trim().toLowerCase().replace(/\s+/g, '-');
+    const { text: rawText, id: customId } = splitHeadingId(token.text);
+    const text = customId ? this.parser.parseInline(marked.Lexer.lexInline(rawText)) : this.parser.parseInline(token.tokens);
+    const cleanId = customId || slugifyHeading(text.replace(/<[^>]*>/g, ''));
     if (token.depth === 1) return '';
-    if (token.depth === 2) {
-      return `
-        <h2 id="${cleanId}" class="text-2xl sm:text-3xl font-bold text-white mt-10 mb-4 pb-2 border-b border-[#8B40FF]/25 flex items-center gap-2 group">
-          <span class="w-2 h-5 rounded-full bg-gradient-to-b from-[#C15BFF] to-[#8B40FF]"></span>
-          <span>${text}</span>
-        </h2>
-      `;
+    if (token.depth === 2 || token.depth === 3) {
+      return `<h${token.depth} id="${cleanId}">${text}</h${token.depth}>\n`;
     }
-    if (token.depth === 3) {
-      return `
-        <h3 id="${cleanId}" class="text-lg sm:text-xl font-bold text-white mt-6 mb-3 text-[#B87AFF]">
-          ${text}
-        </h3>
-      `;
-    }
-    return `<h${token.depth} class="font-bold text-white mt-4 mb-2">${text}</h${token.depth}>`;
+    return `<h${token.depth}>${text}</h${token.depth}>\n`;
   },
 
   link(this: any, token: Tokens.Link): string {
     const text = this.parser.parseInline(token.tokens);
-    const isExternal = token.href.startsWith('http') && !token.href.includes('lingdongyun.sbs');
-    const rel = isExternal ? 'rel="sponsored noopener noreferrer"' : '';
-    const target = isExternal ? 'target="_blank"' : '';
-    const titleAttr = token.title ? `title="${token.title}"` : '';
-    return `<a href="${token.href}" ${rel} ${target} ${titleAttr} class="text-[#C15BFF] hover:text-white underline underline-offset-4 decoration-[#8B40FF]/60 hover:decoration-white font-medium transition-colors">${text}</a>`;
+    const href = token.href;
+    let extra = '';
+    if (href.includes('lingdongaff.com')) {
+      // 注册 / 用户中心入口：新标签页打开
+      extra = ' target="_blank" rel="noopener"';
+    } else if (/^https?:\/\//.test(href) && !/^https:\/\/lingdongyun\.(site|website|best|sbs|lol)\//.test(href)) {
+      extra = ' target="_blank" rel="noopener noreferrer"';
+    }
+    const titleAttr = token.title ? ` title="${token.title}"` : '';
+    return `<a href="${href}"${extra}${titleAttr}>${text}</a>`;
   },
 
   paragraph(this: any, token: Tokens.Paragraph): string {
     const text = this.parser.parseInline(token.tokens);
-    return `<p class="my-4 text-sm sm:text-base leading-relaxed text-[#D4C8ED]/95">${text}</p>\n`;
+    return `<p>${text}</p>\n`;
   },
 
   strong(this: any, token: Tokens.Strong): string {
     const text = this.parser.parseInline(token.tokens);
-    return `<strong class="font-bold text-white">${text}</strong>`;
+    return `<strong>${text}</strong>`;
   },
 
   em(this: any, token: Tokens.Em): string {
     const text = this.parser.parseInline(token.tokens);
-    return `<em class="italic text-[#D4C8ED]">${text}</em>`;
+    return `<em>${text}</em>`;
   },
 
   codespan(this: any, token: Tokens.Codespan): string {
-    return `<code class="px-1.5 py-0.5 rounded bg-[#160C32] border border-[#8B40FF]/30 text-[#B87AFF] font-mono text-xs">${token.text}</code>`;
+    return `<code>${escapeHtml(token.text)}</code>`;
   },
 
   code(this: any, token: Tokens.Code): string {
     const lang = token.lang || 'text';
-    return `
-      <div class="my-6 rounded-xl overflow-hidden border border-[#8B40FF]/30 bg-[#09071C]/90 shadow-lg">
-        <div class="flex items-center justify-between px-4 py-2 bg-[#160C32]/90 border-b border-[#8B40FF]/25 text-xs text-[#D4C8ED]/70 font-mono">
-          <span>${lang}</span>
-          <span class="text-[10px] text-[#8B40FF]">灵动云终端配置</span>
-        </div>
-        <pre class="p-4 overflow-x-auto text-xs sm:text-sm font-mono text-[#D4C8ED] leading-relaxed"><code>${token.text}</code></pre>
-      </div>
-    `;
+    return `<div class="code-block"><div class="code-head"><span>${escapeHtml(lang)}</span><span>示例</span></div><pre><code>${token.escaped ? token.text : escapeHtml(token.text)}</code></pre></div>\n`;
   },
 
   hr(): string {
-    return `<hr class="my-8 border-t border-[#8B40FF]/25" />\n`;
+    return `<hr />\n`;
   },
 };
 
@@ -185,7 +172,20 @@ export function normalizeArticleContent(input: unknown): string {
 }
 
 /**
- * 抽取文章所有二级标题（H2），用于生成动态文章目录（TOC）
+ * 标题末尾可写 {#custom-id} 指定锚点，例如：## 订阅更新失败 {#update-failed}
+ */
+export function splitHeadingId(raw: string): { text: string; id: string | null } {
+  const m = raw.match(/^(.*?)\s*\{#([A-Za-z0-9_-]+)\}\s*$/);
+  if (m) return { text: m[1].trim(), id: m[2] };
+  return { text: raw.trim(), id: null };
+}
+
+export function slugifyHeading(text: string): string {
+  return text.trim().toLowerCase().replace(/\s+/g, '-');
+}
+
+/**
+ * 抽取文章所有二级标题（H2），用于生成文章目录（TOC）
  */
 export function extractTableOfContents(markdown: string): { id: string; title: string }[] {
   const h2Regex = /^##\s+(.+)$/gm;
@@ -193,10 +193,9 @@ export function extractTableOfContents(markdown: string): { id: string; title: s
   let match: RegExpExecArray | null;
 
   while ((match = h2Regex.exec(markdown)) !== null) {
-    const rawTitle = match[1].trim();
-    const cleanTitle = rawTitle.replace(/<[^>]*>/g, '').trim();
-    const cleanId = cleanTitle.toLowerCase().replace(/\s+/g, '-');
-    items.push({ id: cleanId, title: cleanTitle });
+    const { text, id } = splitHeadingId(match[1]);
+    const cleanTitle = text.replace(/<[^>]*>/g, '').replace(/[*_`]/g, '').trim();
+    items.push({ id: id || slugifyHeading(cleanTitle), title: cleanTitle });
   }
 
   return items;
