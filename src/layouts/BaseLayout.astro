@@ -2,7 +2,6 @@
 // BaseLayout.astro: 灵动云帮助中心通用布局（深紫底色、页头页脚、搜索弹窗与 Crisp 在线客服）
 import '../styles/global.css';
 import Header from '../components/Header.astro';
-import GlobalNav from '../components/GlobalNav.astro';
 import MotionHead from '../components/MotionHead.astro';
 import MotionIntro from '../components/MotionIntro.astro';
 import MotionReveal from '../components/MotionReveal.astro';
@@ -37,7 +36,7 @@ const {
 
 const canonicalUrl = `${SITE_CONFIG.siteUrl}${canonicalPath}`;
 
-// 结构化数据：Organization 只引用官网的 @id；WebSite 为本站
+// 结构化数据：Organization 与 WebSite 均为本站
 const graph = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -45,7 +44,7 @@ const graph = {
       '@type': 'Organization',
       '@id': SITE_CONFIG.orgId,
       name: '灵动云',
-      url: SITE_CONFIG.officialSiteUrl,
+      url: `${SITE_CONFIG.siteUrl}/`,
     },
     {
       '@type': 'WebSite',
@@ -109,7 +108,6 @@ const graph = {
   </head>
   <body class="flex min-h-screen flex-col bg-night text-ink">
     <MotionIntro />
-    <GlobalNav />
     <Header />
 
     <main id="main" class="flex-grow">

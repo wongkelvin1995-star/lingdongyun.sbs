@@ -1,6 +1,6 @@
 ---
 // Footer.astro: 灵动云帮助中心页脚
-// 跨域链接只指向官网首页与官方站点说明，不链接其他子站（不做站群互链）。
+// 本站独立运营，不链接任何其他灵动云域名。
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import { SITE_CONFIG } from '../config/site';
@@ -56,7 +56,7 @@ const currentYear = new Date().getFullYear();
     <div class="flex flex-col gap-1 pt-6 text-sm sm:flex-row sm:items-start sm:justify-between sm:gap-8">
       <div>
         <p class="leading-7 text-ink-2">
-          本站是灵动云官方「帮助中心」站点。官网：<a href={SITE_CONFIG.officialSiteUrl} class="link inline-flex min-h-11 items-center">lingdongyun.site</a> · <a href={SITE_CONFIG.officialPageUrl} class="link inline-flex min-h-11 items-center">官方站点说明</a>
+          本站是灵动云官方「帮助中心」站点。
         </p>
         <p class="text-xs text-ink-3">价格与套餐规则以用户中心实时显示为准。</p>
       </div>
