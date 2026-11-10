@@ -1,13 +1,12 @@
 ---
 // index.astro: 灵动云帮助中心首页
-// 结构：Hero（搜索 / 在线客服 / 排查步骤）→ 按问题找答案 → 在线客服与工单 → 网络知识 → 套餐与购买 → 官方站点 → 常见问题
+// 结构：Hero（搜索 / 在线客服 / 排查步骤）→ 按问题找答案 → 在线客服与工单 → 网络知识 → 套餐与购买 → 常见问题
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroEmblem from '../components/HeroEmblem.astro';
 import Icon from '../components/Icon.astro';
 import GuidesSection from '../components/GuidesSection.astro';
 import FaqAccordion from '../components/FaqAccordion.astro';
 import FeedbackSection from '../components/FeedbackSection.astro';
-import FamilyBlock from '../components/FamilyBlock.astro';
 import { SITE_CONFIG } from '../config/site';
 import { FAQS_DATA } from '../data/faqs';
 import { PLANS_DATA, summarizePlans } from '../data/plans';
@@ -154,7 +153,7 @@ const faqSchema = {
             <h2 class="text-xl font-semibold leading-snug text-ink sm:text-2xl">套餐与购买</h2>
           </div>
           <p class="mt-4 text-[0.9375rem] leading-[1.85] text-ink-2">
-            灵动云共有 {PLANS_DATA.length} 档套餐，所有套餐不限速、不限设备数量。帮助中心不做套餐推荐：想按用途比较、估算每月流量，请到套餐选择站；完整的价格与计费规则见官网说明页。
+            灵动云共有 {PLANS_DATA.length} 档套餐，所有套餐不限速、不限设备数量。帮助中心不做套餐推荐：完整的价格与计费规则以用户中心实时显示为准。
           </p>
           <ul class="mt-5 grid grid-cols-2 gap-2.5" role="list">
             {planSummary.map((g) => (
@@ -167,12 +166,6 @@ const faqSchema = {
           <p class="mt-4 text-[0.8125rem] text-ink-3">价格以用户中心实时显示为准。</p>
         </div>
         <div class="flex flex-col gap-2.5">
-          <a href="https://lingdongyun.best/" class="btn btn-secondary link-row">
-            <span>按用途选套餐、估算流量</span><Icon name="arrow-right" />
-          </a>
-          <a href="https://lingdongyun.site/guides/plan-selection/" class="btn btn-secondary link-row">
-            <span>官网：套餐价格与服务说明</span><Icon name="arrow-right" />
-          </a>
           <a href={SITE_CONFIG.registerUrl} target="_blank" rel="noopener" class="btn btn-primary link-row">
             <span>注册并购买</span><Icon name="external" />
           </a>
@@ -180,9 +173,6 @@ const faqSchema = {
       </div>
     </div>
   </section>
-
-  <!-- 官方站点 -->
-  <FamilyBlock />
 
   <!-- 常见问题 -->
   <FaqAccordion />
